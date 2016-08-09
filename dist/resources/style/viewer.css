@@ -1,0 +1,87 @@
+.root {
+  padding: 0px;
+  margin: 0px;
+  size: 16px;
+  line-height: 16px;
+  display: inline-flex;
+}
+.root .lines {
+  float: left;
+  display: inline-block;
+}
+.root .first-level {
+  float: left;
+  clear: left;
+}
+.root .index-container {
+  float: left;
+  display: inline-block;
+}
+.root .index-container .index {
+  min-width: 10px;
+  text-align: right;
+  color: #0AA;
+  margin-right: 5px;
+  display: block;
+  float: left;
+  clear: left;
+}
+.root .index-container.index-container-2 .index {
+  min-width: 15px;
+}
+.root .element {
+  color: #606;
+}
+.root .negate {
+  display: inline;
+  color: #066;
+}
+.root .negate .negation {
+  margin-right: 2px;
+}
+.root .premise-text {
+  margin-left: 5px;
+  color: #066;
+}
+.root .supposed-text {
+  margin-left: 5px;
+  color: #066;
+}
+.root .iteration {
+  box-sizing: border-box;
+  border: 1px solid #0BB;
+  padding-left: 2px;
+  padding-right: 5px;
+  padding-bottom: 1px;
+  margin-top: -1px;
+  margin-bottom: -2px;
+}
+.root .rule {
+  display: inline;
+  margin-left: 5px;
+}
+.root .binary {
+  display: inline;
+}
+.root .close-exp {
+  display: inline;
+}
+.root .connector {
+  margin: auto 5px;
+  color: #066;
+}
+.root .rule-type {
+  color: #066;
+}
+.root .rule-connector {
+  color: #080;
+}
+.root .parenthesis {
+  color: #066;
+}
+.root .parenthesis.start {
+  margin-right: 2px;
+}
+.root .parenthesis.end {
+  margin-left: 2px;
+}

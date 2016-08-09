@@ -1,0 +1,89 @@
+.root{ 
+  padding: 0px; 
+  margin: 0px; 
+  size: 16px;
+  line-height: 16px;
+  display: inline-flex;   
+  .lines{
+    float: left; 
+    display: inline-block;   
+  }
+  .first-level{
+    float: left;
+    clear:left;
+  }
+  .index-container{
+    float: left;
+    display: inline-block;
+    .index{
+      min-width: 10px;
+      text-align: right;    
+      color: #0AA;
+      margin-right: 5px;
+      display: block;
+      float: left;
+      clear:left;
+    }
+    &.index-container-2{
+      .index{
+        min-width: 15px;      
+      }
+    }
+  }
+  .element{
+    color: #606;
+  }
+  .negate{
+    display: inline;
+    color: #066;
+    .negation{
+      margin-right: 2px;
+    }
+  }
+  .premise-text{
+    margin-left: 5px;
+    color: #066;
+  }
+  .supposed-text{
+    margin-left: 5px;
+    color: #066;
+  }
+  .iteration{
+    box-sizing: border-box;
+    border: 1px solid #0BB;
+    padding-left: 2px;
+    padding-right: 5px;
+    padding-bottom: 1px;
+    margin-top: -1px;   
+    margin-bottom: -2px;    
+  }
+  .rule{
+    display: inline;
+    margin-left: 5px;
+  }
+  .binary{
+    display: inline;
+  }
+  .close-exp{
+    display: inline;
+  }
+  .connector{
+    margin: auto 5px;
+    color: #066;
+  }
+  .rule-type{
+    color: #066;    
+  }
+  .rule-connector{
+    color: #080;    
+  }
+  .parenthesis{    
+    color: #066;
+    &.start{
+      margin-right: 2px;
+    }
+    &.end{
+      margin-left: 2px;
+    }
+  }
+}
