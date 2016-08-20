@@ -1,6 +1,6 @@
-# gs-console
+# elementos derivaciones
 
-Consola web para la aplicación gobstones.
+Aplicación de control de derivaciones para la materia Elementos de Programación y lógica
 
 Version: 0.0.0
 
