@@ -6,18 +6,11 @@ write_char = ->
   
 window.onload = ->
   
-  input    = document.querySelector('#codeInput')
-  output   = document.querySelector('#codeOutput')
-  pretty   = document.querySelector('#codePreety')
-  iterator = document.querySelector('#iterator')
-  board_width    = iterator.querySelector('#boardWidth')
-  board_height   = iterator.querySelector('#boardHeight')
-  boardContainer = document.querySelector('#boardContainer')
-  error_text     = document.querySelector('#error')
-  execcode       = document.querySelector('#execCode')
-  action_text    = execcode.querySelector('#action')
-  timeout_text   = execcode.querySelector('#timeout')
-  
+  input        = document.querySelector('#codeInput')
+  pretty       = document.querySelector('#codePreety')
+  execcode     = document.querySelector('#execCode')
+  timeout_text = execcode.querySelector('#timeout')
+  action_text  = execcode.querySelector('#action')
   write_char = (character)->
     focused = document.activeElement is input
     #IE support
@@ -39,14 +32,17 @@ window.onload = ->
   
   allow_execute_change = ->
     if scope.allow_execute 
-      action_text.innerHTML = 'Ejecutar'
+      action_text.innerHTML = 'ASCII'
     else
       action_text.innerHTML = 'Restante: '
+      
   time_left_change = ->
     if scope.time_left > 0 
       timeout_text.innerHTML = scope.time_left
     else
       timeout_text.innerHTML = ''
+      
+  ###
   processing_change = ->
     PROCESSING = 'processing'
     if scope.processing
@@ -71,6 +67,7 @@ window.onload = ->
       iterator.classList.add ERROR
     else
       iterator.classList.remove ERROR
+  ###
     
   scope = {}
   
@@ -87,6 +84,7 @@ window.onload = ->
     countdown()
   
   do ->
+    ###
     processing = null
     Object.defineProperty scope, 'processing',
       get:()->
@@ -94,7 +92,7 @@ window.onload = ->
       set:(next)->
         if next isnt processing
           processing = next
-          processing_change()
+          #processing_change()
     show_processing = null
     Object.defineProperty scope, 'show_processing',
       get:()->
@@ -102,7 +100,7 @@ window.onload = ->
       set:(next)->
         if next isnt show_processing
           show_processing = next
-          show_processing_change()
+          #show_processing_change()
     stopped = null
     Object.defineProperty scope, 'stopped',
       get:()->
@@ -119,6 +117,7 @@ window.onload = ->
         if next isnt has_error
           has_error = next
           error_change()
+    ###
     WAIT_TIME = 1
     time_left = WAIT_TIME
     allow_execute = false
@@ -145,7 +144,6 @@ window.onload = ->
   MODE =
     INPUT:   'input-mode'
     PRETTY:  'pretty-mode'
-    ITERATE: 'iterate-mode'
   MODE.CURRENT = MODE.INPUT
   ast = null
   
@@ -170,18 +168,17 @@ window.onload = ->
     if not vh_support()
       document.body.classList.add 'force-vh-support'
 
+  fix_body_css()
+  
   if typeof Storage isnt 'undefined'
-    storage_key = 'elementos.code'
+    storage_key = 'derivation.code'
     save      = (code) -> localStorage.setItem storage_key, code
     load      = (code) -> localStorage.getItem storage_key
     save_code =        -> save input.value
   
   input.value = load()
 
-  fix_body_css()
-
   fill_code = ->
-    console.log 'parsing'
     while pretty.firstChild
       pretty.removeChild pretty.firstChild
     parser = new elementos.Parser
@@ -191,6 +188,7 @@ window.onload = ->
       pretty.appendChild ast.root.view
     swap_state(MODE.PRETTY)
     
+  ###    
   boardContainer.appendChild environment.view
   
   show_error = (error)->
@@ -295,16 +293,18 @@ window.onload = ->
     w = if w_val and w_val > 0 then w_val else 1
     h = if h_val and h_val > 0 then h_val else 1
     environment.resize(w, h)
-    
+  ###  
+  
   window.input_mode = -> 
-    interpreter.deactivate()
+    #interpreter.deactivate()
     swap_state(MODE.INPUT)
     
   window.pretty_mode = -> 
     if MODE.CURRENT is MODE.ITERATE 
-      interpreter.deactivate()
+      #interpreter.deactivate()
       swap_state(MODE.PRETTY)
 
+  ###  
   handle_key = (evnt)->
     keyCode = evnt.keyCode;
     if keyCode is 13
@@ -316,11 +316,9 @@ window.onload = ->
     if keyCode is 38
       environment.up()
     if keyCode is 40
-      environment.down()
-    
-  document.addEventListener 'keydown', handle_key, false
-  
-  reset_count_down()
-  
+      environment.down()    
+  document.addEventListener 'keydown', handle_key, false  
   window.resize()
+  ###  
+  reset_count_down()
 

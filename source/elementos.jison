@@ -5,33 +5,37 @@
 %%
 
 \s+                                               /* skip whitespace */
-(\Λ|\&)                                           return 'AND'
-(V|\|)                                            return 'OR'
-
-(\→|\-\>)                                         return 'THEN'
-(\↔|(\<\-\>))                                     return 'EQUIVALENT'
-(\<\<)                                            return 'SUPPOSED_END'
-
-'¬¬'                                              return 'DOUBLE_NOT'
-'¬'                                               return 'NOT'
-I(?=((\W)*([\→\↔Λ&V\¬]|(\<\-\>)|(\-\>))(\W)*\())  return 'I'
-E(?=((\W)*([\→\↔Λ&V\¬]|(\<\-\>)|(\-\>))(\W)*\())  return 'E'
-
-'premisa'                                         return 'PREMISA'
-'supuesto'                                        return 'SUPUESTO'
+(\Λ|\∧|\&)(?=((\s)*[^\s]))                           return 'AND'
+(V|v|\∨|\|)(?=((\s)*[^\s\|\<]))                       return 'OR'
 
 
-'('                                               return '('
-')'                                               return ')'
-','                                               return ','
-'.'                                               return '.'
-':'                                               return ':'
-'-'                                               return '-'
 
-[0-9]+                                            return 'NUMERIC'
-[a-zA-Z]([0-9]+)?(?![a-zA-UW-Z])                  return 'ELEMENT'
-<<EOF>>                                           return 'EOF'
-%                                                 return 'INVALID'
+(\→|\-\>)                                            return 'THEN'
+(\↔|(\<\-\>))                                        return 'EQUIVALENT'
+((\s)*(\|)*)*(\<\<)                                  return 'SUPPOSED_END'
+
+\¬\¬(?=((\s)*\(\d))                                  return 'DOUBLE_NOT'
+\¬(?!(\¬(\s)*\(\d))                                  return 'NOT'
+I(?=((\s)*([\→\↔Λ∧&Vv\∨\¬]|(\<\-\>)|(\-\>))(\s)*\())  return 'I'
+E(?=((\s)*([\→\↔Λ∧&Vv\∨\¬]|(\<\-\>)|(\-\>))(\s)*\())  return 'E'
+
+'EFSQ'                                               return 'EFSQ'
+
+'premisa'                                            return 'PREMISA'
+'supuesto'                                           return 'SUPUESTO'
+'⊥'                                                  return 'CONTRADICTION'
+'('                                                  return '('
+')'                                                  return ')'
+','                                                  return ','
+(\.|\:)(\s)*(\|)*                                    return 'SEPARATOR'
+
+((\|)+(\s)*)+                                        return 'END'
+'-'                                                  return '-'
+
+[0-9]+                                               return 'NUMERIC'
+[a-zA-Z]([0-9]+)?(?![a-uw-zA-UW-Z])                  return 'ELEMENT'
+<<EOF>>                                              return 'EOF'
+%                                                    return 'INVALID'
 
 /lex
 
@@ -98,11 +102,18 @@ E(?=((\W)*([\→\↔Λ&V\¬]|(\<\-\>)|(\-\>))(\W)*\())  return 'E'
           expression: expression
         };
     }
-    function nagate(content, expression) {
+    function nagation(content, expression) {
         return {
-          type:       'NEGATE',
+          type:       'NEGATION',
           content:    content,
           expression: expression
+        };
+    }
+    
+    function contradiction(text) {
+        return {
+          type:    'CONTRADICTION',
+          content: text
         };
     }
     
@@ -114,21 +125,33 @@ E(?=((\W)*([\→\↔Λ&V\¬]|(\<\-\>)|(\-\>))(\W)*\())  return 'E'
     }
     
     function ref_array(references) {
+        parsed = []
+        var index;
+        for(index = 0; index < references.length; index++){
+          parsed.push(parseInt(references[index]));
+        }
+          
         return {
-          type:       'ARRAY',
-          references: references
+          type:    'ARRAY',
+          indices: parsed
         };
     }
     function ref_range(first, last) {
         return {
           type:  'RANGE',
-          first: first,
-          last:  last
+          first: parseInt(first),
+          last:  parseInt(last)
         };
     }
     function double_not(references) {
         return {
-          type:       'DOUBLE_NOT',
+          action:       'DOUBLE_NOT',
+          references: references
+        };
+    }
+    function efsq(references) {
+        return {
+          action:     'EFSQ',
           references: references
         };
     }
@@ -144,14 +167,17 @@ E(?=((\W)*([\→\↔Λ&V\¬]|(\<\-\>)|(\-\>))(\W)*\())  return 'E'
 
 %% /* language grammar */
 
-start      : NUMERIC separator line EOF 
+start      : NUMERIC SEPARATOR line END EOF 
              {return line($1, $3);}
+           | NUMERIC SEPARATOR line EOF 
+             {return line($1, $3);}
+           | SUPPOSED_END END EOF 
+             {return {type:'SUPPOSED_END'};}
            | SUPPOSED_END EOF 
              {return {type:'SUPPOSED_END'};}
            ;
 
-separator  : '.' | ':'
-           ;
+multi_or   : multi_or OR | multi_or ;
 
 line       : expression rule
              {$$ = assertion($1, $2);}
@@ -163,13 +189,15 @@ line       : expression rule
 
 rule       : rule_action connector close_ref
              {$$ = action_rule($1, $2, $3);}
-           | 'I' NOT close_ref
-             {$$ = action_rule($1, {type: "NOT", content: $2}, $3);}
+           | rule_action NOT close_ref
+             {$$ = action_rule($1, {type: "NEGATION", content: $2}, $3);}
            | DOUBLE_NOT close_ref
              {$$ = double_not($2);}
+           | EFSQ close_ref
+             {$$ = efsq($2);}
            ;
 
-connector   : AND
+connector  : AND
              {$$ = {type: "CONJUNCTION", content: $1};}
            | OR
              {$$ = {type: "DISJUNCTION", content: $1};}
@@ -218,9 +246,11 @@ close_exp  : '(' expression ')'
 composite  : close_exp
              {$$ = $1;}
            | NOT composite
-             {$$ = nagate($1, $2);}
+             {$$ = nagation($1, $2);}
            | ELEMENT
              {$$ = element($1);}
+           | CONTRADICTION
+             {$$ = contradiction($1);}
            ;
 
 

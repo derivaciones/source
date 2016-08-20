@@ -70,6 +70,9 @@ module.exports = (grunt) ->
       generate:
         files: ['source/elementos.jison']
         tasks: ['generate']
+      assets:
+        files: ['<%= yeoman.src %>/**/*.{jpg,jpg,png}']
+        tasks: ['copy:server']
             
       # watch.livereload: files which demand the page reload
       livereload:

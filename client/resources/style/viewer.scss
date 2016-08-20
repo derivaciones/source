@@ -30,13 +30,32 @@
       }
     }
   }
+  .assertion{ 
+    float: left;
+    clear: left;
+    >*{
+      float: left;
+    }
+    .state-error,
+    .state-not-ok{
+      width: 13px;
+      height: 13px;
+      display: block;
+      margin-top: 1px;
+      margin-left: 5px;
+    }
+  }
+  .premise, .supposed{
+    float: left;
+    clear: left;
+  }
   .element{
     color: #606;
   }
-  .negate{
+  .negation{
     display: inline;
     color: #066;
-    .negation{
+    .negation-content{
       margin-right: 2px;
     }
   }
@@ -56,10 +75,23 @@
     padding-bottom: 1px;
     margin-top: -1px;   
     margin-bottom: -2px;    
+    float: left;
+    clear: left;
+  }
+  .errors{
+    float: left;
+    clear: left;
+  }
+  .error{
+    color: #F00;
+    background: rgba(255, 123, 123, 0.3);
   }
   .rule{
     display: inline;
     margin-left: 5px;
+  }
+  .iteration-close{
+    display: inline;
   }
   .binary{
     display: inline;
@@ -77,7 +109,7 @@
   .rule-connector{
     color: #080;    
   }
-  .parenthesis{    
+  .parenthesis{
     color: #066;
     &.start{
       margin-right: 2px;

@@ -10,9 +10,9 @@ do ->
       root
     ELEMENT: (expression)->
       mk_span expression.identifier, ['element'] 
-    NEGATE: (expression)->
-      root = mk_div ['negate'] 
-      root.appendChild mk_span expression.content, ['negation'] 
+    NEGATION: (expression)->
+      root = mk_div ['negation'] 
+      root.appendChild mk_span expression.content, ['negation-content'] 
       root.appendChild process_expression expression.expression
       root
     CLOSE_EXP: (expression)->
@@ -22,8 +22,13 @@ do ->
       root.appendChild mk_span ')', ['parenthesis', 'end'] 
       root
       
+    CONTRADICTION: (expression)->
+      mk_span expression.content, ['contradiction']
       
   mk = 
+    CLOSE_ITERATION_ERROR: (node)->
+      node.view = mk_div ['iteration-close']
+      node.view.appendChild mk_span '<<', ['iteration-close-text'] 
     PREMISE:   (node)->
       node.view = mk_div ['premise']
       node.view.appendChild process_expression node.expression
@@ -31,22 +36,33 @@ do ->
     SUPPOSED:  (node)->
       node.view = mk_div ['supposed']
       node.view.appendChild process_expression node.expression
-      node.view.appendChild mk_span 'supuesto', ['supposed-text'] 
-    ASSERTION: (node)->
+      node.view.appendChild mk_span 'supuesto', ['supposed-text']
+    ASSERTION: (node, error)->
       node.view = mk_div ['assertion']
       node.view.appendChild process_expression node.expression
       mk_rule node.rule
       node.view.appendChild node.rule.view
-    ITERATION: (node)->
+      if not node.ok 
+        if error
+          node.view.appendChild mk_img ['state-error'], 'assets/error.png'
+        else
+          node.view.appendChild mk_img ['state-not-ok'], 'assets/warning.png'
+    ITERATION: (node, error)->
       node.view = mk_div ['iteration']
-      process_children node
+      process_children node, error
     ERROR:     (node)->
       node.view = mk_div ['errors']
+      for error in node.content
+        error_view = mk_div ['error']
+        node.view.appendChild error_view
+        error_view.appendChild mk_span error, ['error-text']
   
   mk_rule = (rule)->
     rule.view = mk_div ['rule']
-    if rule.type is 'DOUBLE_NOT'
-      rule.view.appendChild mk_span '¬¬', ['rule-type'] 
+    if rule.action is 'DOUBLE_NOT'
+      rule.view.appendChild mk_span '¬¬', ['rule-type']
+    else if rule.action is 'EFSQ'
+      rule.view.appendChild mk_span 'EFSQ', ['rule-type']
     else
       rule.view.appendChild mk_span rule.action, ['rule-type']
       rule.view.appendChild mk_span rule.connector.content, ['rule-connector']
@@ -55,13 +71,11 @@ do ->
   mk_ref = (rule)->
     rule.view.appendChild mk_span '(', ['parenthesis', 'ref'] 
     if rule.references.type is 'ARRAY'
-      references = rule.references.references
-      console.log references
-      for index in [0 ... references.length-1]
-        console.log 'index' + index
-        rule.view.appendChild mk_span references[index], ['reference-index']
+      indices = rule.references.indices
+      for index in [0 ... indices.length-1]
+        rule.view.appendChild mk_span indices[index], ['reference-index']
         rule.view.appendChild mk_span ',', ['reference-reparator']
-      rule.view.appendChild mk_span references[references.length-1], ['reference-index']
+      rule.view.appendChild mk_span indices[indices.length-1], ['reference-index']
     else
        rule.view.appendChild mk_span rule.references.first, ['reference-index']
        rule.view.appendChild mk_span '-', ['reference-reparator']
@@ -71,9 +85,9 @@ do ->
   process_expression = (expression)->
     mk_expression[expression.type](expression)
       
-  process_children = (parent)->
+  process_children = (parent, error)->
     for node in parent.children
-      mk[node.type] node
+      mk[node.type] node, error
       parent.view.appendChild node.view
       
   mk_index = (ast)->
@@ -88,7 +102,7 @@ do ->
     mk_index ast
     lines = mk_div ['lines']
     for node in ast.root.children
-      mk[node.type] node
+      mk[node.type] node, ast.error
       lines.appendChild node.view
       add_classes(node.view, ['first-level'])
     ast.root.view.appendChild lines
@@ -107,6 +121,11 @@ do ->
     
   mk_div = (classes)->
     add_classes (document.createElement 'div'), classes
+      
+  mk_img = (classes, src)->
+    image = add_classes (document.createElement 'IMG'), classes
+    image.src = src
+    image
       
   mk_pre = (classes)->
     add_classes (document.createElement 'pre'), classes

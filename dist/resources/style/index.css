@@ -1,4 +1,20 @@
 @charset "UTF-8";
+.help-button {
+  float: right;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.5s;
+  padding: 5px 10px;
+  width: 60px;
+  margin-top: -15px;
+}
+
 #execCode,
 #checkCode {
   overflow: hidden;
@@ -155,6 +171,12 @@
 .pretty-mode .code-iterator,
 .pretty-mode .code-input {
   width: 6%;
+}
+.pretty-mode .code-input .key-helpers .key-helper {
+  transition: 0.7s;
+  width: 0px;
+  padding: 0px;
+  overflow: hidden;
 }
 .pretty-mode .code-preety {
   width: 88%;
