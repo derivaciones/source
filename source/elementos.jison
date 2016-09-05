@@ -16,10 +16,11 @@
 
 \¬\¬(?=((\s)*\(\d))                                  return 'DOUBLE_NOT'
 \¬(?!(\¬(\s)*\(\d))                                  return 'NOT'
-I(?=((\s)*([\→\↔Λ∧&Vv\∨\¬]|(\<\-\>)|(\-\>))(\s)*\())  return 'I'
-E(?=((\s)*([\→\↔Λ∧&Vv\∨\¬]|(\<\-\>)|(\-\>))(\s)*\())  return 'E'
+I(?=((\s)*([\→\↔Λ∧&Vv\∨\¬]|(\<\-\>)|(\-\>))(\s)*\((\s)*[0-9]))  return 'I'
+E(?=((\s)*([\→\↔Λ∧&Vv\∨\¬]|(\<\-\>)|(\-\>))(\s)*\((\s)*[0-9]))  return 'E'
+R(?=((\s)*\((\s)*[0-9]))                                        return 'R'
 
-'EFSQ'                                               return 'EFSQ'
+'EFSQ'(?=((\s)*\((\s)*[0-9]))                        return 'EFSQ'
 
 'premisa'                                            return 'PREMISA'
 'supuesto'                                           return 'SUPUESTO'
@@ -155,6 +156,12 @@ E(?=((\s)*([\→\↔Λ∧&Vv\∨\¬]|(\<\-\>)|(\-\>))(\s)*\())  return 'E'
           references: references
         };
     }
+    function repeat(references) {
+        return {
+          action:     'REPEAT',
+          references: references
+        };
+    }
     function action_rule(action, connector, references) {
         return {
           action:     action,
@@ -195,6 +202,8 @@ rule       : rule_action connector close_ref
              {$$ = double_not($2);}
            | EFSQ close_ref
              {$$ = efsq($2);}
+           | 'R' close_ref
+             {$$ = repeat($2);}
            ;
 
 connector  : AND

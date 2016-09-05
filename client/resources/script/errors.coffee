@@ -14,6 +14,31 @@ window.onload = ->
       errorsInput.appendChild document.createTextNode('error al procesar')
 
 errors = [
+  
+  " 1:¬q premisa      \n" +
+  " 2:q→r premisa     \n" +
+  " 3:q supuesto      \n" +
+  " 4:¬r R(1)         \n" +
+  " 5:r E→(1,2)       \n" +
+  " 6:⊥ E¬(5,6)       \n" +  
+  " <<                \n" +
+  " 7:(q→r)→q I→(2-3)   "
+  
+  " 1:¬q premisa      \n" +
+  " 2:q→r premisa     \n" +
+  " 3:q supuesto      \n" +
+  " 4:¬r R(1,2)       \n" +
+  " 5:r E→(1,2)       \n" +
+  " 6:⊥ E¬(5,6)       \n" +  
+  " <<                \n" +
+  " 7:(q→r)→q I→(2-3)   "
+  
+  " 1:r premisa       \n" +
+  " 2:q→r supuesto    \n" +
+  " <<                \n" +
+  " 3:q supuesto      \n" +
+  " 4:(q→r)→q I→(2-3)   "
+    
   " 1:¬(qΛr) premisa  \n" +
   " 2:(qΛr) premisa   \n" +  
   " 3:⊥ E¬(1,2)       \n" +  

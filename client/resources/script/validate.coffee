@@ -14,6 +14,15 @@ window.onload = ->
       validateInput.appendChild document.createTextNode('error al procesar')
 
 validate = [
+    
+  " 1:¬r premisa      \n" +
+  " 2:q premisa       \n" +
+  " 3:q→r supuesto    \n" +
+  " 4:¬r R(1)         \n" +
+  " 5:r E→(2,3)       \n" +
+  " 6:⊥ E¬(4,5)       \n" +  
+  " <<                \n" +
+  " 7:¬(q→r) I¬(3-6)   "
   
   " 1. (p | t) → ¬¬r premisa      \n" +
   " 2. ¬(p → r) premisa           \n" +

@@ -23,6 +23,12 @@
       display: block;
       float: left;
       clear:left;
+      &.supposed{
+        margin-top: 11px;
+      }
+      &.supposed-end{
+        margin-top: 11px;
+      }
     }
     &.index-container-2{
       .index{
@@ -30,20 +36,26 @@
       }
     }
   }
-  .assertion{ 
-    float: left;
-    clear: left;
+  .premise,
+  .supposed,
+  .assertion,
+  .iteration-close{ 
     >*{
       float: left;
     }
-    .state-error,
-    .state-not-ok{
-      width: 13px;
-      height: 13px;
-      display: block;
-      margin-top: 1px;
-      margin-left: 5px;
-    }
+  }
+  .state-error,
+  .state-not-ok{
+    float: left;
+    width: 13px;
+    height: 13px;
+    display: block;
+    margin-top: 1px;
+    margin-left: 5px;
+  }
+  .assertion{ 
+    float: left;
+    clear: left;
   }
   .premise, .supposed{
     float: left;
@@ -70,11 +82,12 @@
   .iteration{
     box-sizing: border-box;
     border: 1px solid #0BB;
-    padding-left: 2px;
+    padding-left: 5px;
     padding-right: 5px;
-    padding-bottom: 1px;
-    margin-top: -1px;   
-    margin-bottom: -2px;    
+    padding-bottom: 5px;
+    padding-top: 5px;
+    margin-top: 5px;   
+    margin-bottom: 5px;    
     float: left;
     clear: left;
   }
@@ -91,7 +104,9 @@
     margin-left: 5px;
   }
   .iteration-close{
-    display: inline;
+    clear: left;
+    display: inline-block;
+    float:left;
   }
   .binary{
     display: inline;

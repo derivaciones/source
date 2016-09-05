@@ -1,6 +1,13 @@
 
 viewer = {};
 do ->
+  process_errors = (node, error)->
+    if not node.ok 
+      if error
+        node.view.appendChild mk_img ['state-error'], 'assets/error.png'
+      else
+        node.view.appendChild mk_img ['state-not-ok'], 'assets/warning.png'
+        
   mk_expression = 
     BINARY:  (expression)->
       root = mk_div ['binary'] 
@@ -29,24 +36,23 @@ do ->
     CLOSE_ITERATION_ERROR: (node)->
       node.view = mk_div ['iteration-close']
       node.view.appendChild mk_span '<<', ['iteration-close-text'] 
-    PREMISE:   (node)->
+      process_errors node, true
+    PREMISE:   (node, error)->
       node.view = mk_div ['premise']
       node.view.appendChild process_expression node.expression
       node.view.appendChild mk_span 'premisa', ['premise-text'] 
-    SUPPOSED:  (node)->
+      process_errors node, error
+    SUPPOSED:  (node, error)->
       node.view = mk_div ['supposed']
       node.view.appendChild process_expression node.expression
       node.view.appendChild mk_span 'supuesto', ['supposed-text']
+      process_errors node, error
     ASSERTION: (node, error)->
       node.view = mk_div ['assertion']
       node.view.appendChild process_expression node.expression
       mk_rule node.rule
       node.view.appendChild node.rule.view
-      if not node.ok 
-        if error
-          node.view.appendChild mk_img ['state-error'], 'assets/error.png'
-        else
-          node.view.appendChild mk_img ['state-not-ok'], 'assets/warning.png'
+      process_errors node, error
     ITERATION: (node, error)->
       node.view = mk_div ['iteration']
       process_children node, error
@@ -63,6 +69,8 @@ do ->
       rule.view.appendChild mk_span '¬¬', ['rule-type']
     else if rule.action is 'EFSQ'
       rule.view.appendChild mk_span 'EFSQ', ['rule-type']
+    else if rule.action is 'REPEAT'
+      rule.view.appendChild mk_span 'R', ['rule-type']
     else
       rule.view.appendChild mk_span rule.action, ['rule-type']
       rule.view.appendChild mk_span rule.connector.content, ['rule-connector']
@@ -94,9 +102,9 @@ do ->
     width_klass = 'index-container-' + ast.length.toString().length
     rules = mk_div ['index-container',width_klass]
     ast.root.view.appendChild rules
-    for index in [1 .. ast.length]
-      rules.appendChild mk_span index, ['index']  
-    
+    for elem in ast.indices
+      rules.appendChild mk_span elem.index, ['index', elem.klass]
+  
   viewer.process = (ast)->
     ast.root.view = mk_div ['root']
     mk_index ast

@@ -304,20 +304,27 @@ window.onload = ->
       #interpreter.deactivate()
       swap_state(MODE.PRETTY)
 
-  ###  
   handle_key = (evnt)->
+    unless evnt.ctrlKey then return true
     keyCode = evnt.keyCode;
-    if keyCode is 13
-      local_step()
-    if keyCode is 37
-      environment.left()
-    if keyCode is 39
-      environment.right()
-    if keyCode is 38
-      environment.up()
-    if keyCode is 40
-      environment.down()    
+    if keyCode is 69 #e
+      process = true
+      write_char('→')
+    if keyCode is 82 #r
+      process = true
+      write_char('⊥')
+    if keyCode is 68 #d
+      process = true
+      write_char('V')
+    if keyCode is 70 #f
+      process = true
+      write_char('Λ')
+    if process
+      evnt.preventDefault()
+      false
+      
   document.addEventListener 'keydown', handle_key, false  
+  ###  
   window.resize()
   ###  
   reset_count_down()

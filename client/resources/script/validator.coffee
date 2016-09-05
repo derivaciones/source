@@ -262,6 +262,25 @@ do ->
           'produce'
           print second_nested
           ]
+    repeat_unique_reference:(ast)->
+      ast.error = true
+      ast.current.children.push
+        type: 'ERROR'
+        error_key: 'REPEAT_ERROR'
+        content: [
+          'La repetición espera'
+          'una única referencia'
+          ]
+    repeat_reference:(ast)->
+      ast.error = true
+      ast.current.children.push
+        type: 'ERROR'
+        error_key: 'REPEAT_ERROR'
+        content: [
+          'La repetición espera'
+          'una referencia a un'
+          'elemento equivalente'
+          ]
     efsq_unique_reference:(ast)->
       ast.error = true
       ast.current.children.push
@@ -280,9 +299,32 @@ do ->
           'EFSQ espera una contradicción'
           'como referencia'
           ]
-          
+    unexpected_close_iteration:(ast)->
+      ast.error = true
+      ast.current.children.push
+        type: 'CLOSE_ITERATION_ERROR'
+      ast.current.children.push
+        type: 'ERROR'
+        error_key: 'ITERATION_CLOSE_ERROR'
+        content: [
+          'Para cerrar una iteracion con <<'
+          'se debe partir de un supuesto'
+          ]     
+     unexpected_after_iteration:(ast, parsed)->
+        ast.error = true
+        ast.current.children.push parsed
+        ast.current.children.push
+          type: 'ERROR'
+          error_key: 'ITERATION_CONCLUSION_ERROR'
+          content: [
+            'Luego de una iteración'
+            'se espera una introducción'
+            'de condicional o una'
+            'intruducción de negación'
+            ]     
           
   BINARY        = 'BINARY'
+  ASSERTION     = 'ASSERTION'
   ITERATION     = 'ITERATION'
   DISJUNCTION   = 'DISJUNCTION'
   CONJUNCTION   = 'CONJUNCTION'
@@ -572,6 +614,17 @@ do ->
         return error.efsq_reference ast
       parsed.ok = true
       
+    REPEAT: (ast, parsed)->
+      expression = extract(parsed.expression)
+      references = parsed.rule.references
+      previous = get_refs[references.type](ast, references, parsed.index)
+      if ast.error then return
+      if previous.length isnt 1
+        return error.repeat_unique_reference ast
+      unique_ref = extract(previous[0].expression)
+      if not equals(unique_ref, expression)
+        return error.repeat_reference ast
+      parsed.ok = true
       
     E: (ast, parsed)->
       elimination[parsed.rule.connector.type](ast, parsed)
@@ -582,11 +635,18 @@ do ->
     PREMISE:
       process: (ast, parsed)->
         ast.current.children.push parsed
-        
+        parsed.ok = true
+        ast.indices.push
+          index: parsed.index
+          klass: 'premise'
+          
     ASSERTION:
       process: (ast, parsed)->
         ast.current.children.push parsed
         assertion[parsed.rule.action](ast, parsed)
+        ast.indices.push
+          index: parsed.index
+          klass: if parsed.iteration then 'supposed-end' else 'assertion'
         
     SUPPOSED:
       process: (ast, parsed)->
@@ -596,26 +656,25 @@ do ->
           parent: ast.current
         ast.current.children.push node
         ast.current = node
+        parsed.ok = true
         node.children.push parsed
+        ast.indices.push
+          index: parsed.index
+          klass: 'supposed'
         
     SUPPOSED_END:
       process: (ast, parsed)->
         #controlar que no sea un nuevo supuesto
         if ast.current.type isnt ITERATION
-          ast.error = true
-          ast.current.children.push
-            type: 'CLOSE_ITERATION_ERROR'
-          ast.current.children.push
-            type: 'ERROR'
-            error_key: 'ITERATION_CLOSE_ERROR'
-            content: [
-              'Para cerrar una iteracion con <<'
-              'se debe partir de un supuesto'
-              ]     
-          return     
+          return error.unexpected_close_iteration ast
+            
         parsed.iteration = ast.current
         ast.current = ast.current.parent
         ast.supposed_end = false
+        if parsed.type isnt ASSERTION
+          return error.unexpected_after_iteration ast, parsed
+        #Importante: aca es donde se puede 
+        #omitir la conclusión de la iteración
         processors.ASSERTION.process(ast, parsed)
       
   clean = (ast)->    
@@ -641,13 +700,13 @@ do ->
         type: 'ROOT'
         children: []
       index: 1
+      indices: []
     ast.current = ast.root
     for line in lines
       if /^(\s)*$/.test(line) #empty line
         continue
       if /^(\s)*\*\*/.test(line) #comment line
         continue
-      try
       if /^((\s)*\|)*((\s)*\-)*((\s)*\|)*(\s)*$/.test(line) # || -------- |
         continue
       try
@@ -669,11 +728,12 @@ do ->
           #prevents closes without supposed context
           parent = ast.current.parent or ast.current
           parent.children.push
+            type: 'CLOSE_ITERATION_ERROR'
+          parent.children.push
             type: 'ERROR'
             error_key: 'SUPPOSED_ERROR'
             parsed: parsed
             content: [
-              '<<'
               'No se pueden realizar'
               'dos cierres de contextos'
               'de suposición consecutivos'
