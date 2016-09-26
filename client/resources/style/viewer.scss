@@ -96,9 +96,11 @@
     clear: left;
   }
   .error{
+    width: 100%;
     color: #F00;
     background: rgba(255, 123, 123, 0.3);
   }
+  
   .rule{
     display: inline;
     margin-left: 5px;

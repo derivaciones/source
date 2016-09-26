@@ -61,7 +61,7 @@ do ->
       for error in node.content
         error_view = mk_div ['error']
         node.view.appendChild error_view
-        error_view.appendChild mk_span error, ['error-text']
+        error_view.appendChild mk_paragraph error, ['error-text']
   
   mk_rule = (rule)->
     rule.view = mk_div ['rule']
@@ -123,6 +123,12 @@ do ->
     
   mk_span = (text, classes)->
     view = document.createElement 'span'
+    text = document.createTextNode text
+    view.appendChild text
+    add_classes view, classes
+      
+  mk_paragraph = (text, classes)->
+    view = document.createElement 'p'
     text = document.createTextNode text
     view.appendChild text
     add_classes view, classes

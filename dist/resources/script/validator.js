@@ -3,23 +3,41 @@ var validator;
 validator = {};
 
 (function() {
-  var ASSERTION, BINARY, CONDITIONAL, CONJUNCTION, CONTRADICTION, DISJUNCTION, ITERATION, NEGATION, REF, assertion, clean, compare, elimination, equals, error, exist, exp_string, extract, get_node, get_refs, introduction, match_references, print, processors;
+  var ASSERTION, BINARY, CONDITIONAL, CONJUNCTION, CONTRADICTION, DISJUNCTION, ITERATION, NEGATION, REF, assertion, clean, compare, elimination, equals, error, exist, exp_string, extract, get_node, get_refs, interpolates, introduction, match_references, print, processors;
+  interpolates = function(errorElement, context) {
+    var contentItem, interpolated, prop, result, transformer, transformers, _i, _j, _k, _len, _len1, _len2, _ref;
+    transformers = [];
+    for (_i = 0, _len = context.length; _i < _len; _i++) {
+      prop = context[_i];
+      transformers.push({
+        value: context[prop],
+        regExp: new RegExp('\$(\s)*\{' + prop + '\}')
+      });
+    }
+    result = {
+      type: errorElement.type,
+      content: []
+    };
+    _ref = errorElement.content;
+    for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+      contentItem = _ref[_j];
+      interpolated = contentItem;
+      for (_k = 0, _len2 = transformers.length; _k < _len2; _k++) {
+        transformer = transformers[_k];
+        interpolated.replace(transformer.regExp, transformer.value);
+      }
+      result.content.push(interpolated);
+    }
+    return result;
+  };
   error = {
     reference_later: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'REFERENCES_ERROR',
-        content: ['Deben utilizarse referencias a', 'lineas anteriores a la actual']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.REFERENCIA_A_LINEA_POSTERIOR);
     },
     conjunction_unique_reference: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'CONJUNCTION_ELIMINATION_ERROR',
-        content: ['La eliminacion de la conjunción', 'debe tener una única referencia']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.REFERENCIA_MULTIPLE_ELIMINACION_CONJUNCION);
     },
     conjunction_elimination: function(ast, expression) {
       ast.error = true;
@@ -31,11 +49,7 @@ validator = {};
     },
     conjunction_connector: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'CONJUNCTION_CONNECTOR_ERROR',
-        content: ['La intruducción de la', 'conjunción permite generar', 'una formula con un conector Λ']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.INTRODUCCION_CONJUNCION_CONECTOR_INCORRECTO);
     },
     invalid_iteration_reference: function(ast, first, last) {
       ast.error = true;
@@ -55,11 +69,7 @@ validator = {};
     },
     disjunction_connector: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'DISJUNCTION_INTRODUCTION_ERROR',
-        content: ['La intruducción de la', 'disyunción permite generar ', 'una formula con un conector V']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.INTRODUCCION_DISYUNCION_CONECTOR_INCORRECTO);
     },
     disjunction_introduction: function(ast, left, right) {
       ast.error = true;
@@ -71,19 +81,11 @@ validator = {};
     },
     conditional_connector: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'CONDITIONAL_INTRODUCTION_ERROR',
-        content: ['La intruducción del', 'condicional permite', 'generar una formula', 'con un conector →']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.INTRODUCCION_CONDICIONAL_CONECTOR_INCORRECTO);
     },
     conditional_iteration_lack: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'CONDITIONAL_INTRODUCTION_ERROR',
-        content: ['La introducción de un', 'condicional debe suceder', 'a un contexto de suposición']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.INTRODUCCION_CONDICIONAL_FALTA_ITERACION);
     },
     conditional_introduction: function(ast, left, right) {
       ast.error = true;
@@ -95,19 +97,11 @@ validator = {};
     },
     negation_type: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'NEGATION_INTRODUCTION_ERROR',
-        content: ['La intruducción de', 'la negación permite', 'generar una formula', 'con un simbolo ¬']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.INTRODUCCION_NEGACION_FALTA_NAGACION);
     },
     negation_iteration_lack: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'NEGATION_INTRODUCTION_ERROR',
-        content: ['La introducción de la', 'negación debe suceder a', 'un contexto de suposición']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.INTRODUCCION_NEGACION_FALTA_ITERACION);
     },
     negation_introduction: function(ast, expression) {
       ast.error = true;
@@ -119,102 +113,60 @@ validator = {};
     },
     negation_isnt_contradiction: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'NEGATION_ELIMINATION_ERROR',
-        content: ['La eliminación de', 'la negación genera', 'una contradicción (⊥)']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.ELIMINACION_NEGACION_NO_CONTRADICCION);
     },
     negation_elimination_references: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'NEGATION_ELIMINATION_ERROR',
-        content: ['La eliminación de la', 'negación espera dos elementos', 'opuestos, Por ejemplo:', '1:(pVq)', '2:¬(pVq)', '3:⊥ E¬(1,2)', 'Asegurece también de indicar', 'las referencias correctamente']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.ELIMINACION_NEGACION_REFERENCIAS_INVALIDAS);
     },
     conditional_elimination_references: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'CONDITIONAL_ELIMINATION_ERROR',
-        content: ['La eliminación del', 'condicional espera dos', 'elementos, de los cuales,', 'uno es una implicación y el', 'otro el antecedente del', 'primero. Por ejemplo:', '1:(pVq)→p premisa', '2:(pVq) premisa', '3:p E→(1,2)', 'Asegurece también de indicar', 'las referencias correctamente']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.ELIMINACION_CONDICIONAL_REFERENCIAS_INVALIDAS);
     },
     disjunction_elimination_references: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'DISJUNCTION_ELIMINATION_ERROR',
-        content: ['La eliminación de la', 'disyunción espera tres', 'elementos, de los cuales,', 'uno es una disyunción y los', 'otros dos, son condicionales', 'que tienen como premisa las', 'partes del primero. Y permite', 'extraer el consecuente de los', 'últimos. Por ejemplo:', '1:pVq premisa', '2:p→s premisa', '3:q→s premisa', '4:s EV(1,2,3)', 'Asegurece también de indicar', 'las referencias correctamente']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.ELIMINACION_DISYUNCION_REFERENCIAS_INVALIDAS);
     },
     double_negation_unique_reference: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'DOUBLE_NEGATION_ERROR',
-        content: ['La eliminacion de la ', 'negación doble debe tener', 'una única referencia']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.DOBLE_NEGACION_REFERENCIAS_MULTIPLES);
     },
-    double_negation_references: function(ast) {
+    double_negation_references_type: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'DOUBLE_NEGATION_ERROR',
-        content: ['La regla de la doble', 'negación espera un', 'elemento negado dos', 'veces. Por ejemplo:', '1:¬¬(pVq) premisa', '2:(pVq) ¬¬(1)', 'Asegurece también de indicar', 'las referencias correctamente']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.DOBLE_NEGACION_TIPO_REFERENCIAS_INVALIDAS);
     },
     double_negation_equal: function(ast, first_ref, second_nested) {
+      var context, error_node;
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'DOUBLE_NEGATION_ERROR',
-        content: ['Eliminar la doble', 'negación en', print(first_ref), 'produce', print(second_nested)]
-      });
+      context = {
+        dobleNegacionReferida: print(first_ref),
+        referenciaDespejado: print(print(second_nested))
+      };
+      error_node = interpolates(ERROR_ELEMENT.DOBLE_NEGACION_RESULTADO_INVALIDO, context);
+      return ast.current.children.push(error_node);
     },
     repeat_unique_reference: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'REPEAT_ERROR',
-        content: ['La repetición espera', 'una única referencia']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.REPETICION_REFERENCIAS_MULTIPLES);
     },
     repeat_reference: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'REPEAT_ERROR',
-        content: ['La repetición espera', 'una referencia a un', 'elemento equivalente']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.REPETICION_REFERENCIAS_INVALIDAS);
     },
     efsq_unique_reference: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'EFSQ_ERROR',
-        content: ['EFSQ espera una', 'única referencia']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.EFSQ_REFERENCIAS_MULTIPLES);
     },
     efsq_reference: function(ast) {
       ast.error = true;
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'EFSQ_ERROR',
-        content: ['EFSQ espera una contradicción', 'como referencia']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.EFSQ_REFERENCIAS_INVALIDAS);
     },
     unexpected_close_iteration: function(ast) {
       ast.error = true;
       ast.current.children.push({
         type: 'CLOSE_ITERATION_ERROR'
       });
-      return ast.current.children.push({
-        type: 'ERROR',
-        error_key: 'ITERATION_CLOSE_ERROR',
-        content: ['Para cerrar una iteracion con <<', 'se debe partir de un supuesto']
-      });
+      return ast.current.children.push(ERROR_ELEMENT.CIERRE_ITERACION_SIN_SUPUESTO);
     },
     unexpected_after_iteration: function(ast, parsed) {
       ast.error = true;
@@ -587,11 +539,11 @@ validator = {};
       }
       unique_ref = extract(previous[0].expression);
       if (unique_ref.type !== NEGATION) {
-        return error.double_negation_references(ast);
+        return error.double_negation_references_type(ast);
       }
       first_nested = extract(unique_ref.expression);
       if (first_nested.type !== NEGATION) {
-        return error.double_negation_references(ast);
+        return error.double_negation_references_type(ast);
       }
       second_nested = extract(first_nested.expression);
       if (!equals(second_nested, expression)) {

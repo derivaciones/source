@@ -3,7 +3,7 @@ var viewer;
 viewer = {};
 
 (function() {
-  var add_classes, mk, mk_div, mk_expression, mk_img, mk_index, mk_pre, mk_ref, mk_rule, mk_single, mk_span, process_children, process_errors, process_expression;
+  var add_classes, mk, mk_div, mk_expression, mk_img, mk_index, mk_paragraph, mk_pre, mk_ref, mk_rule, mk_single, mk_span, process_children, process_errors, process_expression;
   process_errors = function(node, error) {
     if (!node.ok) {
       if (error) {
@@ -82,7 +82,7 @@ viewer = {};
         error = _ref[_i];
         error_view = mk_div(['error']);
         node.view.appendChild(error_view);
-        _results.push(error_view.appendChild(mk_span(error, ['error-text'])));
+        _results.push(error_view.appendChild(mk_paragraph(error, ['error-text'])));
       }
       return _results;
     }
@@ -173,6 +173,13 @@ viewer = {};
   mk_span = function(text, classes) {
     var view;
     view = document.createElement('span');
+    text = document.createTextNode(text);
+    view.appendChild(text);
+    return add_classes(view, classes);
+  };
+  mk_paragraph = function(text, classes) {
+    var view;
+    view = document.createElement('p');
     text = document.createTextNode(text);
     view.appendChild(text);
     return add_classes(view, classes);

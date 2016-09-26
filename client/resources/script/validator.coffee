@@ -2,28 +2,32 @@ validator = {}
 
 do ->
   
+  interpolates = (errorElement, context)->
+    transformers = []
+    for prop in context
+      transformers.push
+        value: context[prop]
+        regExp: new RegExp('\$(\s)*\{' + prop + '\}')
+    result = 
+      type: errorElement.type
+      content:[]
+    for contentItem in errorElement.content
+      interpolated = contentItem
+      for transformer in transformers
+        interpolated.replace transformer.regExp, transformer.value
+      result.content.push interpolated
+    result
+  
   error =
-    reference_later:(ast)->
+    reference_later: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'REFERENCES_ERROR'
-        content: [
-          'Deben utilizarse referencias a'
-          'lineas anteriores a la actual'
-          ]
-    conjunction_unique_reference:(ast)->
+      ast.current.children.push ERROR_ELEMENT.REFERENCIA_A_LINEA_POSTERIOR
+    conjunction_unique_reference: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'CONJUNCTION_ELIMINATION_ERROR'
-        content: [
-          'La eliminacion de la conjunción'
-          'debe tener una única referencia'
-          ]
+      ast.current.children.push ERROR_ELEMENT.REFERENCIA_MULTIPLE_ELIMINACION_CONJUNCION
     conjunction_elimination: (ast, expression)->
       ast.error = true
-      ast.current.children.push
+      ast.current.children.push #ERROR_ELEMENT.
         type: 'ERROR'
         error_key: 'CONJUNCTION_ELIMINATION_ERROR'
         content: [
@@ -35,14 +39,7 @@ do ->
           ]
     conjunction_connector:(ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'CONJUNCTION_CONNECTOR_ERROR'
-        content: [
-          'La intruducción de la'
-          'conjunción permite generar'
-          'una formula con un conector Λ'
-          ]
+      ast.current.children.push ERROR_ELEMENT.INTRODUCCION_CONJUNCION_CONECTOR_INCORRECTO
     invalid_iteration_reference:(ast, first, last)->
       ast.error = true
       ast.current.children.push
@@ -55,7 +52,7 @@ do ->
           ]
     conjunction_introduction_references: (ast, left, right)->
       ast.error = true
-      ast.current.children.push
+      ast.current.children.push 
         type: 'ERROR'
         error_key: 'CONJUNCTION_INTRODUCTION_REFERENCE_ERROR'
         content: [
@@ -70,14 +67,7 @@ do ->
           ]
     disjunction_connector: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'DISJUNCTION_INTRODUCTION_ERROR'
-        content: [
-          'La intruducción de la'
-          'disyunción permite generar '
-          'una formula con un conector V'
-          ]
+      ast.current.children.push ERROR_ELEMENT.INTRODUCCION_DISYUNCION_CONECTOR_INCORRECTO
     disjunction_introduction: (ast, left, right)->
       ast.error = true
       ast.current.children.push
@@ -94,25 +84,10 @@ do ->
           ]
     conditional_connector: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'CONDITIONAL_INTRODUCTION_ERROR'
-        content: [
-          'La intruducción del'
-          'condicional permite'
-          'generar una formula'
-          'con un conector →'
-          ]
+      ast.current.children.push ERROR_ELEMENT.INTRODUCCION_CONDICIONAL_CONECTOR_INCORRECTO
     conditional_iteration_lack: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'CONDITIONAL_INTRODUCTION_ERROR'
-        content: [
-          'La introducción de un'
-          'condicional debe suceder'
-          'a un contexto de suposición'
-          ]
+      ast.current.children.push ERROR_ELEMENT.INTRODUCCION_CONDICIONAL_FALTA_ITERACION
     conditional_introduction: (ast, left, right)->
       ast.error = true
       ast.current.children.push
@@ -128,25 +103,10 @@ do ->
           ]
     negation_type: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'NEGATION_INTRODUCTION_ERROR'
-        content: [
-          'La intruducción de'
-          'la negación permite'
-          'generar una formula'
-          'con un simbolo ¬'
-          ]
+      ast.current.children.push ERROR_ELEMENT.INTRODUCCION_NEGACION_FALTA_NAGACION
     negation_iteration_lack: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'NEGATION_INTRODUCTION_ERROR'
-        content: [
-          'La introducción de la'
-          'negación debe suceder a'
-          'un contexto de suposición'
-          ]
+      ast.current.children.push ERROR_ELEMENT.INTRODUCCION_NEGACION_FALTA_ITERACION
     
     negation_introduction: (ast, expression)->
       ast.error = true
@@ -162,154 +122,47 @@ do ->
           ]
     negation_isnt_contradiction: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'NEGATION_ELIMINATION_ERROR'
-        content: [
-          'La eliminación de'
-          'la negación genera'
-          'una contradicción (⊥)'
-          ]
+      ast.current.children.push ERROR_ELEMENT.ELIMINACION_NEGACION_NO_CONTRADICCION
     negation_elimination_references: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'NEGATION_ELIMINATION_ERROR'
-        content: [
-          'La eliminación de la'
-          'negación espera dos elementos'
-          'opuestos, Por ejemplo:'
-          '1:(pVq)'
-          '2:¬(pVq)'
-          '3:⊥ E¬(1,2)'
-          'Asegurece también de indicar'
-          'las referencias correctamente'
-          ]    
+      ast.current.children.push ERROR_ELEMENT.ELIMINACION_NEGACION_REFERENCIAS_INVALIDAS
     conditional_elimination_references: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'CONDITIONAL_ELIMINATION_ERROR'
-        content: [
-          'La eliminación del'
-          'condicional espera dos'
-          'elementos, de los cuales,'
-          'uno es una implicación y el' 
-          'otro el antecedente del'
-          'primero. Por ejemplo:'
-          '1:(pVq)→p premisa'
-          '2:(pVq) premisa'
-          '3:p E→(1,2)'
-          'Asegurece también de indicar'
-          'las referencias correctamente'
-          ]
+      ast.current.children.push ERROR_ELEMENT.ELIMINACION_CONDICIONAL_REFERENCIAS_INVALIDAS
     disjunction_elimination_references: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'DISJUNCTION_ELIMINATION_ERROR'
-        content: [
-          'La eliminación de la'
-          'disyunción espera tres'
-          'elementos, de los cuales,'
-          'uno es una disyunción y los' 
-          'otros dos, son condicionales'
-          'que tienen como premisa las'
-          'partes del primero. Y permite'
-          'extraer el consecuente de los'
-          'últimos. Por ejemplo:'
-          '1:pVq premisa'
-          '2:p→s premisa'
-          '3:q→s premisa'
-          '4:s EV(1,2,3)'
-          'Asegurece también de indicar'
-          'las referencias correctamente'
-          ]
+      ast.current.children.push ERROR_ELEMENT.ELIMINACION_DISYUNCION_REFERENCIAS_INVALIDAS
     double_negation_unique_reference:(ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'DOUBLE_NEGATION_ERROR'
-        content: [
-          'La eliminacion de la '
-          'negación doble debe tener'
-          'una única referencia'
-          ]
-    double_negation_references: (ast)->
+      ast.current.children.push ERROR_ELEMENT.DOBLE_NEGACION_REFERENCIAS_MULTIPLES
+    double_negation_references_type: (ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'DOUBLE_NEGATION_ERROR'
-        content: [
-          'La regla de la doble'
-          'negación espera un'
-          'elemento negado dos'
-          'veces. Por ejemplo:'
-          '1:¬¬(pVq) premisa'
-          '2:(pVq) ¬¬(1)'
-          'Asegurece también de indicar'
-          'las referencias correctamente'
-          ]
+      ast.current.children.push ERROR_ELEMENT.DOBLE_NEGACION_TIPO_REFERENCIAS_INVALIDAS
     double_negation_equal: (ast, first_ref, second_nested)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'DOUBLE_NEGATION_ERROR'
-        content: [
-          'Eliminar la doble'
-          'negación en'
-          print first_ref
-          'produce'
-          print second_nested
-          ]
+      context = 
+        dobleNegacionReferida: print first_ref
+        referenciaDespejado: print print second_nested
+      error_node = interpolates ERROR_ELEMENT.DOBLE_NEGACION_RESULTADO_INVALIDO, context
+      ast.current.children.push error_node
+        
     repeat_unique_reference:(ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'REPEAT_ERROR'
-        content: [
-          'La repetición espera'
-          'una única referencia'
-          ]
+      ast.current.children.push ERROR_ELEMENT.REPETICION_REFERENCIAS_MULTIPLES
     repeat_reference:(ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'REPEAT_ERROR'
-        content: [
-          'La repetición espera'
-          'una referencia a un'
-          'elemento equivalente'
-          ]
+      ast.current.children.push ERROR_ELEMENT.REPETICION_REFERENCIAS_INVALIDAS
     efsq_unique_reference:(ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'EFSQ_ERROR'
-        content: [
-          'EFSQ espera una'
-          'única referencia'
-          ]
+      ast.current.children.push ERROR_ELEMENT.EFSQ_REFERENCIAS_MULTIPLES
     efsq_reference:(ast)->
       ast.error = true
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'EFSQ_ERROR'
-        content: [
-          'EFSQ espera una contradicción'
-          'como referencia'
-          ]
+      ast.current.children.push ERROR_ELEMENT.EFSQ_REFERENCIAS_INVALIDAS
     unexpected_close_iteration:(ast)->
       ast.error = true
       ast.current.children.push
         type: 'CLOSE_ITERATION_ERROR'
-      ast.current.children.push
-        type: 'ERROR'
-        error_key: 'ITERATION_CLOSE_ERROR'
-        content: [
-          'Para cerrar una iteracion con <<'
-          'se debe partir de un supuesto'
-          ]     
+      ast.current.children.push ERROR_ELEMENT.CIERRE_ITERACION_SIN_SUPUESTO
      unexpected_after_iteration:(ast, parsed)->
         ast.error = true
         ast.current.children.push parsed
@@ -593,10 +446,10 @@ do ->
         return error.double_negation_unique_reference ast
       unique_ref = extract(previous[0].expression)
       if unique_ref.type isnt NEGATION
-        return error.double_negation_references ast
+        return error.double_negation_references_type ast
       first_nested = extract(unique_ref.expression)
       if first_nested.type isnt NEGATION
-        return error.double_negation_references ast
+        return error.double_negation_references_type ast
       second_nested = extract(first_nested.expression)
       if not equals(second_nested, expression)
         return error.double_negation_equal ast, unique_ref, second_nested
