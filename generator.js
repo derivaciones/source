@@ -17,13 +17,13 @@ var arg_options = {};
   }
 }();
 
-fs.readFile('./source/elementos.jison', 'utf8', function (err,data) {
+fs.readFile('./source/derivaciones.jison', 'utf8', function (err,data) {
   if (err) {
     return console.log(err);
   }  
   var parser = new Parser(data);
-  var parserSource = parser.generate({moduleName: 'elementos'});
-  var dest_path = './' + (arg_options.dest || 'dist/elementos.js');
+  var parserSource = parser.generate({moduleName: 'derivaciones'});
+  var dest_path = './' + (arg_options.dest || 'dist/derivaciones.js');
   var dest = path.parse(dest_path);
   mkdirp(dest.dir, function(err) { 
     if (err) {

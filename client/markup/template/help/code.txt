@@ -1,0 +1,18 @@
+ 1. q → r premisa
+ 2. (t V u) → q premisa
+ 3. ¬s → ¬¬q premisa
+ 4. (t V ¬s) supuesto
+ 5. ¬s supuesto
+ 6. ¬¬q E→(3,5)
+ 7. q ¬¬(6)
+<<
+ 8. ¬s → q I→(5-7)
+ 9. t supuesto
+10. (t V u) IV(9)
+11. q E→(2,10)
+<<
+12. t → q I→(9-11)
+13. q EV(4,8,12)
+14. r E→(1,13)
+<<
+15. (t V ¬s) → r I→(4-14)

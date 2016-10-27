@@ -1,0 +1,145 @@
+.root{ 
+  padding: 0px; 
+  margin: 0px; 
+  size: 16px;
+  line-height: 16px;
+  display: inline-flex;   
+  .lines{
+    float: left; 
+    display: inline-block;   
+  }
+  .first-level{
+    float: left;
+    clear:left;
+  }
+  .index-container{
+    float: left;
+    display: inline-block;
+    .index{
+      min-width: 10px;
+      text-align: right;    
+      color: #0AA;
+      margin-right: 5px;
+      display: block;
+      float: left;
+      clear:left;
+      &.supposed{
+        margin-top: 24px;
+      }
+      &.supposed-end{
+        margin-top: 24px;
+      }
+    }
+    &.index-container-2{
+      .index{
+        min-width: 15px;      
+      }
+    }
+  }
+  .premise,
+  .supposed,
+  .assertion,
+  .iteration-close{ 
+    margin-top: 8px;
+    >*{
+      float: left;
+    }
+  }
+  .state-error,
+  .state-not-ok{
+    float: left;
+    width: 13px;
+    height: 13px;
+    display: block;
+    margin-top: 1px;
+    margin-left: 5px;
+  }
+  .assertion{ 
+    float: left;
+    clear: left;
+  }
+  .premise, .supposed{
+    float: left;
+    clear: left;
+  }
+  .element{
+    color: #606;
+  }
+  .negation{
+    display: inline;
+    color: #066;
+    .negation-content{
+      margin-right: 2px;
+    }
+  }
+  .premise-text{
+    margin-left: 5px;
+    color: #066;
+  }
+  .supposed-text{
+    margin-left: 5px;
+    color: #066;
+  }
+  .iteration{
+    box-sizing: border-box;
+    border: 1px solid #0BB;
+    padding-left: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    margin-top: 10px;
+    margin-bottom: 5px;   
+    float: left;
+    clear: left;
+  }
+  .errors{
+    //width: 300px;
+    margin-right: 10px;
+    margin-top: 10px;
+    float: left;
+    clear: left;
+  }
+  .error{
+    width: 100%;
+    color: #F00;
+    background: rgba(255, 123, 123, 0.3);
+    .error-text{
+      margin:0;
+    }
+  }
+  
+  .rule{
+    display: inline;
+    margin-left: 5px;
+  }
+  .iteration-close{
+    clear: left;
+    display: inline-block;
+    float:left;
+  }
+  .binary{
+    display: inline;
+  }
+  .close-exp{
+    display: inline;
+  }
+  .connector{
+    margin: auto 5px;
+    color: #066;
+  }
+  .rule-type{
+    color: #066;    
+  }
+  .rule-connector{
+    color: #080;    
+  }
+  .parenthesis{
+    color: #066;
+    &.start{
+      margin-right: 2px;
+    }
+    &.end{
+      margin-left: 2px;
+    }
+  }
+}

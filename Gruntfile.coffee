@@ -65,14 +65,14 @@ module.exports = (grunt) ->
         files: ['<%= yeoman.src %>/**/*.scss']
         tasks: ['sass:server']
       preprocess:
-        files: ['<%= yeoman.src %>/**/*.{html,html}']
-        tasks: ['preprocess:server']
+        files: ['<%= yeoman.src %>/**/*.{html,html,txt}']
+        tasks: ['copy:text','preprocess:server','bake:server']
       generate:
         files: ['source/elementos.jison']
         tasks: ['generate']
       assets:
         files: ['<%= yeoman.src %>/**/*.{jpg,jpg,png}']
-        tasks: ['copy:server']
+        tasks: ['copy:assets']
             
       # watch.livereload: files which demand the page reload
       livereload:
@@ -129,6 +129,15 @@ module.exports = (grunt) ->
     #################################################
     #                     html                      #
     #################################################
+    bake:
+      server:
+        files: [
+          expand: true
+          cwd: '<%= yeoman.tmp %>/markup/page'
+          src: '**/*.{htm,html}'
+          dest: '<%= yeoman.dist %>'
+          ext: '.html'
+        ]
     
     preprocess:
       options:
@@ -141,9 +150,9 @@ module.exports = (grunt) ->
       server:
         files: [
           expand: true
-          cwd: '<%= yeoman.src %>'
+          cwd: '<%= yeoman.src %>/markup'
           src: '**/*.{htm,html}'
-          dest: '<%= yeoman.dist %>'
+          dest: '<%= yeoman.tmp %>/markup'
           ext: '.html'
         ]
       
@@ -152,12 +161,33 @@ module.exports = (grunt) ->
     #################################################  
 
     copy:
-      server:
+      favicon:
         files: [
           expand: true
           cwd: '<%= yeoman.src %>'
-          src: '**/*.{jpg,png}'
+          src: 'favicon.png'
           dest: '<%= yeoman.dist %>'
+        ]
+      assets:
+        files: [
+          expand: true
+          cwd: '<%= yeoman.src %>/asset'
+          src: '**/*.{jpg,png}'
+          dest: '<%= yeoman.dist %>/asset'
+        ]
+      text:
+        files: [
+          expand: true
+          cwd: '<%= yeoman.src %>/markup'
+          src: '**/*.txt'
+          dest: '<%= yeoman.tmp %>/markup'
+        ]
+      github:
+        files: [
+          expand: true
+          cwd: '<%= yeoman.src %>/style/github'
+          src: '**/*'
+          dest: '<%= yeoman.dist %>/style/github'
         ]
         
     #################################################
@@ -193,7 +223,7 @@ module.exports = (grunt) ->
     
   grunt.registerTask 'generate', (target) ->
     commands = [
-      'node generator.js --dest=' + yeomanConfig.dist + '/resources/script/elementos.js'
+      'node generator.js --dest=' + yeomanConfig.dist + '/script/component/elementos.js'
     ]
     for command in commands
       grunt.log.write command + '\n'
@@ -204,8 +234,12 @@ module.exports = (grunt) ->
     grunt.task.run [
       'clean:dist'
       'clean:tmp'
-      'copy:server'
+      'copy:favicon'
+      'copy:github'
+      'copy:assets'
+      'copy:text'
       'preprocess:server'
+      'bake:server'
       'generate'
       'coffee:server'
       'sass:server'      
