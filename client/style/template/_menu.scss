@@ -1,0 +1,66 @@
+.menu-container{
+  position: absolute;
+  top: 0;
+  right: 4px;
+  .menu{
+    position: absolute;  
+    top: 0;
+    right: 0; 
+    .menu-button-text,
+    .menu-button-icon,
+    .menu-button{
+      border: none;
+      color: #00897B;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      transition: all 0.5s;
+      position: relative;  
+      width: 50px;
+      border: 2px solid #00897B;
+      background-color: transparent;
+      margin-bottom: 4px;
+      float: right;
+      clear: right;
+    }
+    .menu-button-icon{
+      font-size: 12px;
+      padding: 6px 5px 2px 5px;
+      .fa{
+        position: relative;
+        top: -2px;
+      }
+    }
+    .menu-button-text{
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 12px;
+      padding: 6px 5px 8px 5px;
+    }
+    .menu-button{
+      font-weight: bold;
+      font-size: 16px;
+      padding: 7px 5px;
+    }
+  }
+}
+
+@media only screen and (min-width: 640px) and (max-width: 960px){
+  .output-mode{
+    .menu-container{
+      right: 0;
+      .menu{
+        .menu-button-text,
+        .menu-button-icon,
+        .menu-button{
+          //font-size: 1px;
+          width: 0px;
+          padding-left: 0;
+          padding-right: 0;
+          border: none;
+         }
+      }
+    }
+  }
+}

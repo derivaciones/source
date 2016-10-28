@@ -2,7 +2,7 @@ load         = -> ''
 save         = ->
 inputChange  = ->
 process      = ->
-writeChar    = ->
+writeInput   = ->
 inputMode    = ->
   
 window.onload = ->
@@ -11,21 +11,21 @@ window.onload = ->
   process      = document.querySelector('#process')
   output       = document.querySelector('#output')
   
-  writeChar = (character)->
-    focused = document.activeElement is input
+  writeInput = (text)->
+    text = text or ''
     #IE support
     if document.selection
       input.focus()
       sel = document.selection.createRange()
-      sel.text = character
+      sel.text = text
     #MOZILLA and others
     else if (input.selectionStart or input.selectionStart is '0')
       startPos = input.selectionStart
       endPos = input.selectionEnd
-      input.value = input.value.substring(0, startPos) + character + input.value.substring(endPos, input.value.length)
-      input.selectionEnd = endPos + 1
+      input.value = input.value.substring(0, startPos) + text + input.value.substring(endPos, input.value.length)
+      input.selectionEnd = endPos + text.length
     else 
-      input.value += character
+      input.value += text
     inputChange()
     input.focus()
     
@@ -39,19 +39,28 @@ window.onload = ->
     document.body.classList.remove MODE.CURRENT
     MODE.CURRENT = state
     document.body.classList.add MODE.CURRENT
+      
+  firstTime = ->
+    window.location = 'first.html'
   
   if typeof window.localStorage isnt 'undefined'
-    storage_key = 'derivation.code'
-    save        = (code) -> localStorage.setItem storage_key, code
-    load        = (code) -> localStorage.getItem storage_key
+    storageKey = 'derivation.code'
+    save        = (code) -> localStorage.setItem storageKey, code
+    load        = (code) -> localStorage.getItem storageKey
     inputChange =        -> save input.value
-  
+    visitKey  = 'derivation.visit'
+    if not localStorage.getItem visitKey
+      localStorage.setItem visitKey, true
+      firstTime()
+  else
+    firstTime()
+    
   input.value = load()
   
-  previosActiveElement = null
+  previousActiveElement = null
   
   mousedownHandler = (evn)->
-    previosActiveElement = document.activeElement  
+    previousActiveElement = document.activeElement  
   process.addEventListener 'mousedown', mousedownHandler, false  
   
   processHandler = (evn)->
@@ -62,9 +71,9 @@ window.onload = ->
     if ast
       viewer.process(ast)
       output.appendChild ast.root.view
-    swapMode(MODE.OUTPUT)
-    previosActiveElement.focus()
+    previousActiveElement.focus()
     evn.preventDefault()
+    swapMode(MODE.OUTPUT)
     
   process.addEventListener 'click', processHandler, false  
   
@@ -94,7 +103,7 @@ window.onload = ->
     keyCode = evnt.keyCode
     for action in actions
       if action.keyCode is keyCode
-        writeChar action.char
+        writeInput action.char
         evnt.preventDefault()
         evnt.stopPropagation()
         return true

@@ -1,4 +1,5 @@
 @import '../template/input';
+@import '../template/menu';
 @import '../template/output';
 @import '../template/viewer';
 
@@ -31,8 +32,7 @@ main{
 
 .input-container,
 .output-container{
-  float: left;
-  width: 50%;
+  float: left;  
   position: relative;
   transition: all 0.5s;
   box-sizing: border-box;
@@ -40,10 +40,18 @@ main{
   overflow: hidden;
 }
 .input-container{
-  padding-right: 2px;
+  width: 60%;
 }
 .output-container{
-  padding-left: 2px;
+  width: 40%;
+}
+.output-mode{
+  .input-container{
+    width: 40%;
+  }
+  .output-container{
+    width: 60%;
+  }
 }
 
 #input,
@@ -80,7 +88,7 @@ main{
 }
 
 
-@media only screen and (min-width: 640px) and (max-width: 767px){
+@media only screen and (min-width: 640px) and (max-width: 960px){
   
   .input-container{
     width: 90%;
@@ -96,22 +104,8 @@ main{
     .output-container{
       width: 90%;
     }
-    #process{
-      opacity: 0;
-      padding: 0px;
-      height: 0px;
-    }
     #input{
       overflow:hidden;
-    }
-    .key-helpers {
-      .key-helper-icon,
-      .key-helper{
-        overflow:hidden;
-        width: 0px;
-        padding:0px;
-        border:0px;
-      }
     }
   }
 }
@@ -137,9 +131,8 @@ main{
     clear: both;
     #input{
       height: auto;
-      min-height: 300px;
+      min-height: 320px;
     }
-    padding-right: 0;
   }
   .output-container{
     width: 100%;

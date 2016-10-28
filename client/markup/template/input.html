@@ -1,13 +1,4 @@
 <div class="input-container">
-  <button type="button" id="process">
-    <span class="button-text">Comprobar </span>
-    <span class="button-icon">»</span>
-  </button>
-  <div class="key-helpers">
-    <!--(bake ../template/button.html symbol="&and;"  write="Λ" key="f")-->
-    <!--(bake ../template/button.html symbol="&or;"   write="V" key="d")-->
-    <!--(bake ../template/icon-button.html klass="arrow-right" write="→" key="e")-->
-    <!--(bake ../template/button.html symbol="&perp;" write="⊥" key="r")-->
-  </div>
-  <textarea id="input" onkeyup="inputChange()" onfocus="inputMode()"></textarea>
+  <textarea id="input" onkeyup="inputChange()" onfocus="inputMode()" spellcheck="false"></textarea>
+  <!--(bake menu.html)-->
 </div>
