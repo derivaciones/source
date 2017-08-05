@@ -53,28 +53,28 @@ code.bold{
 @media only screen and (min-width: 768px) {
   header{
     a.button {
-    transition: all 0.5s;
-    margin-right: -12px;
-    padding-left: 80px;
-    .fa{
-      @include rotate(-45);
-      margin-left: 5px;
-      transition: opacity .5s ease-out;
-      opacity: 0;
-    }
-    &:hover{
-      padding-left: 68px;
-      margin-right: 0;
+      transition: all 0.5s;
+      margin-right: -12px;
+      padding-left: 80px;
       .fa{
-        opacity: 1;
-        animation-name: move;
-        animation-duration: 1s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
+        @include rotate(-45);
+        margin-left: 5px;
+        transition: opacity .5s ease-out;
+        opacity: 0;
       }
-      
+      &:hover{
+        padding-left: 68px;
+        margin-right: 0;
+        .fa{
+          opacity: 1;
+          animation-name: move;
+          animation-duration: 1s;
+          animation-iteration-count: infinite;
+          animation-timing-function: linear;
+        }
+
+      }
     }
-  }
   }
 }
 
@@ -107,5 +107,5 @@ code.bold{
       }
     }
   }
-  
+
 }

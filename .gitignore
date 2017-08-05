@@ -1,8 +1,9 @@
 .project
 node_modules
 bower_components
-dist/*
-tmp/*
-
 .sass*
-
+tmp/*
+!tmp/.gitignore
+dist/*
+!dist/.gitignore
+npm-debug.log

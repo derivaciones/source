@@ -4,9 +4,9 @@ save_code  = ->
 check_code = ->
 fill_code  = ->
 write_char = ->
-  
+
 window.onload = ->
-  input = document.querySelector('#codeInput')
+  input  = document.querySelector('#codeInput')
   output = document.querySelector('#codeOutput')
   pretty = document.querySelector('#codePreety')
   if typeof Storage isnt 'undefined'
@@ -25,7 +25,7 @@ window.onload = ->
     catch evnt
       parsed = evnt.message
     output.value = parsed
-    
+
   write_char = (character)->
     focused = document.activeElement is input
     #IE support
@@ -39,10 +39,10 @@ window.onload = ->
       endPos = input.selectionEnd
       input.value = input.value.substring(0, startPos) + character + input.value.substring(endPos, input.value.length)
       input.selectionEnd = endPos + 1
-    else 
+    else
       input.value += character
     input.focus()
-    
+
   fill_code = ->
     while pretty.firstChild
       pretty.removeChild pretty.firstChild
@@ -53,4 +53,3 @@ window.onload = ->
       pretty.appendChild ast.view
     catch evnt
       pretty.innerHTML = evnt.message.replace /\n/g, '</br>'
-    

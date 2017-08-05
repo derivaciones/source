@@ -1,3 +1,4 @@
+@import '../layout/full';
 @import '../template/input';
 @import '../template/menu';
 @import '../template/output';
@@ -5,34 +6,9 @@
 
 $collapsed-width: 6%;
 
-body{
-  margin: 0px;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-header{
-  float: left;
-  width: 100%;
-  height: 110px;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-main{
-  float: left;
-  width: 100%;
-  height: 100vh;
-  position: absolute;
-  box-sizing: border-box;
-  padding-top: 110px + 4px;
-  padding-bottom: 4px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
 .input-container,
 .output-container{
-  float: left;  
+  float: left;
   position: relative;
   transition: all 0.5s;
   box-sizing: border-box;
@@ -64,39 +40,24 @@ main{
 
 @media only screen and (min-width: 640px){
   @media (max-height: 500px) {
-    body{
-      height: auto;
-      overflow: auto;
-    }
-    header{
-      position: relative;
-    }
-    main{
-      height: auto;
-      overflow: auto;
-      position: relative;
-      box-sizing: border-box;
-      padding-top: 4px;
-    }
     .input-container{
       height: 500px;
     }
     .output-container{
       height: 500px;
-    }  
+    }
   }
 }
 
-
 @media only screen and (min-width: 640px) and (max-width: 960px){
-  
+
   .input-container{
     width: 90%;
   }
   .output-container{
     width: 10%;
   }
-  
+
   .output-mode{
     .input-container{
       width: 10%;
@@ -111,20 +72,6 @@ main{
 }
 
 @media only screen and (max-width: 639px){
-  body{
-    height: auto;
-    overflow: auto;
-  }
-  header{
-    position: relative;
-  }
-  main{
-    height: auto;
-    overflow: auto;
-    position: relative;
-    box-sizing: border-box;
-    padding-top: 4px;
-  }
   .input-container{
     height: auto;
     width: 100%;
@@ -143,4 +90,3 @@ main{
     padding-left: 0;
   }
 }
-

@@ -30,9 +30,9 @@
 }
 
 .code-input .key-helpers{
-  position: absolute;  
+  position: absolute;
   bottom: 10px;
-  right: 10px; 
+  right: 10px;
 }
 
 .code-input .key-helpers .key-helper,
@@ -48,9 +48,9 @@
 }
 
 .code-input .key-helpers .key-helper{
-  position: relative;  
+  position: relative;
   bottom: 10px;
-  right: 10px; 
+  right: 10px;
   background-color: #00897B;
   padding: 5px 5px;
 }
@@ -61,7 +61,7 @@
   background-color: #4CAF50;
   padding: 10px 32px;
   width: 200px;
-  position: absolute;  
+  position: absolute;
 }
 #checkCode:focus{
   outline: none;
@@ -75,7 +75,7 @@
 }
 
 #checkCode span:after {
-  content: '»';
+  content: '>>';
   position: absolute;
   opacity: 0;
   top: 0;
@@ -100,4 +100,4 @@
       }
     }
   }
-} 
+}

@@ -1,6 +1,6 @@
 {
   "name": "elementos-parser",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "author": "Alejandro Castro <alejandrocastrounqui@gmail.com>",
   "description": "",
   "main": "dist/index.html",

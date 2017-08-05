@@ -17,44 +17,44 @@ app_name = require('./package.json').name
 # use this if you want to recursively match all subfolders:
 # 'test/spec/**/*.js'
 module.exports = (grunt) ->
-  
+
   unless app_name
     throw new TypeError('must specify an application name in bower.json file')
-    
+
   grunt.log.write 'application name: ' + app_name + '\n'
-    
+
   require('load-grunt-tasks') grunt
-  require('time-grunt') grunt
+  # require('time-grunt') grunt
   # configurable paths
-  
+
   yeomanConfig =
     bower:   'bower_components'
     src:     'client'
     dist:    'dist'
     tmp:     'tmp'
   do ->
-    (maybe_dist = grunt.option('dist')) and 
-    (typeof maybe_dist is 'string') and 
+    (maybe_dist = grunt.option('dist')) and
+    (typeof maybe_dist is 'string') and
     yeomanConfig.dist = maybe_dist
   do ->
-    (maybe_tmp = grunt.option('tmp')) and 
-    (typeof maybe_tmp is 'string') and 
+    (maybe_tmp = grunt.option('tmp')) and
+    (typeof maybe_tmp is 'string') and
     yeomanConfig.tmp = maybe_tmp
-    
+
   grunt.loadNpmTasks 'grunt-bake'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-html-angular-validate'
   grunt.loadNpmTasks 'grunt-preprocess'
   grunt.loadNpmTasks 'grunt-string-replace'
-  
+
   grunt.initConfig
     yeoman: yeomanConfig
-    
+
     #################################################
     #                  livereload                   #
     #################################################
-    # watch: cada vez que un archivo cambia 
+    # watch: cada vez que un archivo cambia
     # dentro de 'files' se ejecutan las correspodientes 'tasks'
     watch:
 
@@ -73,7 +73,7 @@ module.exports = (grunt) ->
       assets:
         files: ['<%= yeoman.src %>/**/*.{jpg,jpg,png}']
         tasks: ['copy:assets']
-            
+
       # watch.livereload: files which demand the page reload
       livereload:
         options:
@@ -81,10 +81,10 @@ module.exports = (grunt) ->
         files: [
           '<%= yeoman.dist %>/**/*'
         ]
-    
+
     connect:
       options:
-        port: 9002
+        port: 3001
         # default 'localhost'
         # Change this to '0.0.0.0' to access the server from outside.
         hostname: "0.0.0.0"
@@ -93,26 +93,29 @@ module.exports = (grunt) ->
           middleware: (connect) ->
             [lrSnippet, mountFolder(connect, yeomanConfig.dist)]
 
-    open:
-      server:
-        url: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>/'
-        
     clean:
       dist:
         files: [
           dot: true
-          src: ['<%= yeoman.dist %>/**/*','!<%= yeoman.dist %>/bower_components/**']
+          src: [
+            '<%= yeoman.dist %>/**/*',
+            '!<%= yeoman.dist %>/.gitignore',
+            '!<%= yeoman.dist %>/bower_components/**'
+          ]
         ]
       tmp:
         files: [
           dot: true
-          src: ['<%= yeoman.tmp %>/**/*']
+          src: [
+            '<%= yeoman.tmp %>/**/*',
+            '!<%= yeoman.tmp %>/.gitignore'
+          ]
         ]
-        
+
     #################################################
     #                    styles                     #
-    #################################################      
-      
+    #################################################
+
     sass:
       server:
         options:
@@ -125,7 +128,7 @@ module.exports = (grunt) ->
           dest: '<%= yeoman.dist %>'
           ext: '.css'
         ]
-              
+
     #################################################
     #                     html                      #
     #################################################
@@ -138,7 +141,7 @@ module.exports = (grunt) ->
           dest: '<%= yeoman.dist %>'
           ext: '.html'
         ]
-    
+
     preprocess:
       options:
         inline: true
@@ -155,10 +158,10 @@ module.exports = (grunt) ->
           dest: '<%= yeoman.tmp %>/markup'
           ext: '.html'
         ]
-      
+
     #################################################
     #                  copy helper                  #
-    #################################################  
+    #################################################
 
     copy:
       favicon:
@@ -189,10 +192,10 @@ module.exports = (grunt) ->
           src: '**/*'
           dest: '<%= yeoman.dist %>/style/github'
         ]
-        
+
     #################################################
     #                    scripts                    #
-    #################################################  
+    #################################################
 
     coffee:
       server:
@@ -219,8 +222,8 @@ module.exports = (grunt) ->
 
     #################################################
     #                    exec                       #
-    #################################################  
-    
+    #################################################
+
   grunt.registerTask 'generate', (target) ->
     commands = [
       'node generator.js --dest=' + yeomanConfig.dist + '/script/component/elementos.js'
@@ -228,8 +231,7 @@ module.exports = (grunt) ->
     for command in commands
       grunt.log.write command + '\n'
       exec command, cdw: __dirname
-      
-        
+
   grunt.registerTask 'server', (target) ->
     grunt.task.run [
       'clean:dist'
@@ -242,8 +244,7 @@ module.exports = (grunt) ->
       'bake:server'
       'generate'
       'coffee:server'
-      'sass:server'      
+      'sass:server'
       'connect:livereload'
-      'open'
       'watch'
     ]
