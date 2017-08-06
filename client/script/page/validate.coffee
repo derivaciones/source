@@ -1,29 +1,34 @@
 
 window.onload = ->
   validateInput = document.querySelector('#validatePreety')
-  parser = new elementos.Parser
+  parser = new derivaciones.Parser
   for example, index in validate
     ast = validator.validate(example, parser)
     if ast
       viewer.process(ast)
-      if index % 3 is 0
-        ast.root.view.classList.add 'pull-left'
       ast.root.view.title = example
-      validateInput.appendChild ast.root.view
+      container = document.createElement 'div'
+      container.classList.add 'valid-container'
+      codeElem = document.createElement 'pre'
+      container.appendChild codeElem
+      container.appendChild ast.root.view
+      rawContent = document.createTextNode example
+      codeElem.appendChild rawContent
+      validateInput.appendChild container
     else
       validateInput.appendChild document.createTextNode('error al procesar')
 
 validate = [
-    
+
   " 1:¬r premisa      \n" +
   " 2:q premisa       \n" +
   " 3:q→r supuesto    \n" +
   " 4:¬r R(1)         \n" +
   " 5:r E→(2,3)       \n" +
-  " 6:⊥ E¬(4,5)       \n" +  
+  " 6:⊥ E¬(4,5)       \n" +
   " <<                \n" +
   " 7:¬(q→r) I¬(3-6)   "
-  
+
   " 1. (p | t) → ¬¬r premisa      \n" +
   " 2. ¬(p → r) premisa           \n" +
   "    -------------------        \n" +
@@ -40,7 +45,7 @@ validate = [
   "    -------------------        \n" +
   " <<                            \n" +
   "10. ¬(q → p) I¬(3-9)             "
-  
+
   " 1. p → q premisa        \n" +
   " 2. p ∨ r premisa        \n" +
   " --------------          \n" +
@@ -56,8 +61,8 @@ validate = [
   "    --------------       \n" +
   "   <<                    \n" +
   " 9. r → (q v r) I→(7-8)  \n" +
-  "10. q v r Ev(2, 6, 9)    " 
-  
+  "10. q v r Ev(2, 6, 9)    "
+
   " 1. (p ∧ q ) → r premisa     \n" +
   "    -------------------      \n" +
   " 2.| p supuesto        |     \n" +
@@ -71,7 +76,7 @@ validate = [
   "    <<                       \n" +
   "    -------------------      \n" +
   " 7. p → (q → r) I → (2-6)    "
-  
+
   " 1. q → r premisa        \n" +
   " 2. (t V u) → q premisa  \n" +
   " 3. ¬s → ¬¬q premisa     \n" +
@@ -90,43 +95,42 @@ validate = [
   "14. r E→(1,13)           \n" +
   "<<                       \n" +
   "15. (t V ¬s) → r I→(4-14)  "
-  
+
   " 1:¬¬(qVr) premisa \n" +
   " 2:q→r premisa     \n" +
-  " 3:qVr ¬¬(1)         " 
-  
+  " 3:qVr ¬¬(1)         "
+
   " 1:qVq premisa     \n" +
   " 2:q→r premisa     \n" +
-  " 3:r EV(1,2)         " 
-    
+  " 3:r EV(1,2)         "
+
   " 1:qVr premisa     \n" +
   " 2:r→s premisa     \n" +
   " 3:q→s premisa     \n" +
-  " 4:s EV(1,2,3)         " 
-    
+  " 4:s EV(1,2,3)         "
+
   " 1:r premisa       \n" +
   " 2:r→q supuesto    \n" +
   " 3:q E→(1,2)       \n" +
   " <<                \n" +
   " 4:(r→q)→q I→(2-3)   "
-  
+
   " 1:r premisa      \n" +
   " 2:¬r supuesto    \n" +
   " 3:⊥ E¬(1,2)      \n" +
   " <<               \n" +
   " 4:¬r → ⊥ I→(2-3)   "
-  
+
   " 1:q premisa      \n" +
-  " 2:q Λ q IΛ(1)" 
-  
+  " 2:q Λ q IΛ(1)"
+
   " 1:q premisa      \n" +
   " 2:r premisa      \n" +
-  " 3:q Λ r IΛ(1,2)" 
-  
-  " 1:q premisa      \n" +
-  " 2:q V q IV(1)" 
-  
-  " 1:q premisa      \n" +
-  " 2:q V r IV(1)" 
-]
+  " 3:q Λ r IΛ(1,2)"
 
+  " 1:q premisa      \n" +
+  " 2:q V q IV(1)"
+
+  " 1:q premisa      \n" +
+  " 2:q V r IV(1)"
+]

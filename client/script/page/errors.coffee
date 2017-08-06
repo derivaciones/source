@@ -6,8 +6,6 @@ window.onload = ->
     ast = validator.validate(error, parser)
     if ast
       viewer.process(ast)
-      if index % 3 is 0
-        ast.root.view.classList.add 'pull-left'
       ast.root.view.title = error
       container = document.createElement 'div'
       container.classList.add 'error-container'

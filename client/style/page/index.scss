@@ -38,6 +38,18 @@ $collapsed-width: 6%;
   box-sizing: border-box;
 }
 
+.output-container{
+  #output{
+    overflow-y: auto;
+  }
+}
+.input-container{
+  #input{
+    white-space: nowrap;
+  }
+}
+
+
 @media only screen and (min-width: 640px){
   @media (max-height: 500px) {
     .input-container{
