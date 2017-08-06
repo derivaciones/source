@@ -1,7 +1,7 @@
 validator = {}
 
 do ->
-  
+
   interpolates = (errorElement, context)->
     content = errorElement.content
     for prop of context
@@ -9,10 +9,10 @@ do ->
       content = content.replace(regExp, context[prop])
     type: errorElement.type
     content: content
-    
+
   CLOSE_ITERATION_ERROR =
     type: 'CLOSE_ITERATION_ERROR'
-  
+
   error =
     reference_later: (ast)->
       ast.error = true
@@ -22,7 +22,7 @@ do ->
       ast.current.children.push ERROR_ELEMENT.REFERENCIA_MULTIPLE_ELIMINACION_CONJUNCION
     conjunction_elimination: (ast, expression)->
       ast.error = true
-      context = 
+      context =
         expression: print(expression)
       error_node = interpolates ERROR_ELEMENT.ELIMINACION_CONJUNCION_REFERENCIA_INVALIDA, context
       ast.current.children.push error_node
@@ -31,14 +31,14 @@ do ->
       ast.current.children.push ERROR_ELEMENT.INTRODUCCION_CONJUNCION_CONECTOR_INCORRECTO
     invalid_iteration_reference:(ast, first, last)->
       ast.error = true
-      context = 
+      context =
         firstReferenceIndex: first
         lastReferenceIndex: last
       error_node = interpolates ERROR_ELEMENT.ITERACION_REFERENCIA_INVALIDA, context
       ast.current.children.push error_node
     conjunction_introduction_references: (ast, left, right)->
       ast.error = true
-      context = 
+      context =
         leftExpression: print(left)
         rightExpression: print(right)
       error_node = interpolates ERROR_ELEMENT.INTRODUCCION_CONJUNCION_REFERENCIA_INVALIDA, context
@@ -48,7 +48,7 @@ do ->
       ast.current.children.push ERROR_ELEMENT.INTRODUCCION_DISYUNCION_CONECTOR_INCORRECTO
     disjunction_introduction: (ast, left, right)->
       ast.error = true
-      context = 
+      context =
         leftExpression: print(left)
         rightExpression: print(right)
       error_node = interpolates ERROR_ELEMENT.INTRODUCCION_DISYUNCION_REFERENCIA_INVALIDA, context
@@ -61,7 +61,7 @@ do ->
       ast.current.children.push ERROR_ELEMENT.INTRODUCCION_CONDICIONAL_FALTA_ITERACION
     conditional_introduction: (ast, left, right)->
       ast.error = true
-      context = 
+      context =
         leftExpression: print(left)
         rightExpression: print(right)
       error_node = interpolates ERROR_ELEMENT.INTRODUCCION_CONDICIONAL_ITERACION_INVALIDA, context
@@ -97,12 +97,12 @@ do ->
       ast.current.children.push ERROR_ELEMENT.DOBLE_NEGACION_TIPO_REFERENCIAS_INVALIDAS
     double_negation_equal: (ast, first_ref, second_nested)->
       ast.error = true
-      context = 
+      context =
         dobleNegacionReferida: print first_ref
         referenciaDespejado: print second_nested
       error_node = interpolates ERROR_ELEMENT.DOBLE_NEGACION_RESULTADO_INVALIDO, context
       ast.current.children.push error_node
-        
+
     repeat_unique_reference:(ast)->
       ast.error = true
       ast.current.children.push ERROR_ELEMENT.REPETICION_REFERENCIAS_MULTIPLES
@@ -119,11 +119,18 @@ do ->
       ast.error = true
       ast.current.children.push CLOSE_ITERATION_ERROR
       ast.current.children.push ERROR_ELEMENT.CIERRE_ITERACION_SIN_SUPUESTO
+    unique_element_iteration:(ast, suposed)->
+      ast.error = true
+      ast.current.children.push CLOSE_ITERATION_ERROR
+      context =
+        suposed: print suposed
+      error_node = interpolates ERROR_ELEMENT.CIERRE_ITERACION_ELEMENTO_UNICO, context
+      ast.current.children.push error_node
     unexpected_after_iteration:(ast, parsed)->
       ast.error = true
       ast.current.children.push parsed
       ast.current.children.push ERROR_ELEMENT.FORMULA_INVALIDA_LUEGO_DE_ITERACION
-          
+
   BINARY        = 'BINARY'
   ASSERTION     = 'ASSERTION'
   ITERATION     = 'ITERATION'
@@ -135,7 +142,7 @@ do ->
   REF =
     RANGE: 'RANGE'
     ARRAY: 'ARRAY'
-  
+
   get_node = (parent, index)->
     for node in parent.children
       if node.type is ITERATION
@@ -143,12 +150,12 @@ do ->
         if candidate then return candidate
       else if node.index is index
         return node
-        
+
   exist = (elem, previous)->
     for parsed in previous
       if equals elem, parsed.expression then return true
     return false
-  
+
   get_refs =
     RANGE: (ast, references, max)->
       if max <= references.first or max <= references.last
@@ -158,7 +165,7 @@ do ->
         #all references must exist
         result.push get_node ast.root, index
       return result
-      
+
     ARRAY: (ast, references, max)->
       result = []
       for index in references.indices
@@ -166,8 +173,8 @@ do ->
           return error.reference_later ast
         result.push get_node ast.root, index
       return result
-  
-  match_references = (first, last, ref)-> 
+
+  match_references = (first, last, ref)->
     if ref.type is REF.RANGE
       first is ref.first and last is ref.last or
       first is ref.last and last is ref.first
@@ -177,8 +184,8 @@ do ->
         if ref.indices.indexOf(expected) is -1
           return false
       true
-  
-  exp_string = 
+
+  exp_string =
     BINARY:  (expression)->
       print(expression.left)+' '+expression.connector.content+' '+print(expression.right)
     ELEMENT: (expression)->
@@ -189,42 +196,42 @@ do ->
       '(' + print(expression.expression) + ')'
     CONTRADICTION: (expression)->
       expression.content
-      
+
   print = (expression)->
     exp_string[expression.type](expression)
-  
+
   extract = (expression)->
     if expression.type is 'CLOSE_EXP'
       extract expression.expression
     else
       expression
-    
+
   equals = (first, second)->
     clean_first = extract first
     clean_second = extract second
-    clean_first.type is clean_second.type and 
+    clean_first.type is clean_second.type and
     compare[clean_first.type](clean_first, clean_second)
-      
+
   compare =
     BINARY: (first, second)->
-      first.connector.type is second.connector.type and  
+      first.connector.type is second.connector.type and
       compare[first.connector.type](first, second)
-    CONJUNCTION: (first, second)-> 
+    CONJUNCTION: (first, second)->
       equals(first.left, second.left) and equals(first.right, second.right) or
-      equals(first.right, second.left) and equals(first.left, second.right) 
-    DISJUNCTION: (first, second)-> 
+      equals(first.right, second.left) and equals(first.left, second.right)
+    DISJUNCTION: (first, second)->
       equals(first.left, second.left) and equals(first.right, second.right) or
-      equals(first.right, second.left) and equals(first.left, second.right) 
-    CONDITIONAL: (first, second)-> 
+      equals(first.right, second.left) and equals(first.left, second.right)
+    CONDITIONAL: (first, second)->
       equals(first.left, second.left) and equals(first.right, second.right)
-    BICONDITIONAL: (first, second)-> 
+    BICONDITIONAL: (first, second)->
       equals(first.left, second.left) and equals(first.right, second.right)
-    NEGATION: (first, second)-> 
-      equals(first.expression, second.expression)  
-    ELEMENT: (first, second)-> 
+    NEGATION: (first, second)->
+      equals(first.expression, second.expression)
+    ELEMENT: (first, second)->
       first.identifier is second.identifier
     CONTRADICTION: (first, second)-> true
-  
+
   elimination =
     CONJUNCTION: (ast, parsed)->
       expression = extract(parsed.expression)
@@ -239,21 +246,21 @@ do ->
       not (equals(expression, unique_exp.left) or equals(expression, unique_exp.right))
         return error.conjunction_elimination ast, expression
       parsed.ok = true
-        
+
     DISJUNCTION: (ast, parsed)->
       classify = (elements, ast)->
         classified = conditionals:[]
         for element in elements
           expression = extract(element.expression)
-          if expression.type is BINARY 
+          if expression.type is BINARY
             if expression.connector.type is DISJUNCTION
-              unless classified.disjunction 
+              unless classified.disjunction
                 classified.disjunction = expression
                 continue
             if expression.connector.type is CONDITIONAL
               classified.conditionals.push expression
               continue
-          return error.disjunction_elimination_references ast 
+          return error.disjunction_elimination_references ast
         classified
       expression = extract(parsed.expression)
       references = parsed.rule.references
@@ -271,7 +278,7 @@ do ->
       v_right = classified.disjunction.right
       match_antedecent = (left, right, first, second)->
         equals(left, first.left) and equals(right, second.left)
-      if conditionals.length is 1  
+      if conditionals.length is 1
         #case: pVp,p→s,s
         if match_antedecent(v_left, v_right, first_cond, first_cond) and
         equals(expression, first_cond.right)
@@ -279,17 +286,17 @@ do ->
         else
           return error.disjunction_elimination_references ast
       else #conditionals.length is 2
-        #case: pVq,p→s,q→s,s      
-        second_cond = conditionals[1]        
+        #case: pVq,p→s,q→s,s
+        second_cond = conditionals[1]
         dynamic_match_antedecent = (left, right, first, second)->
-          match_antedecent(left, right, first, second) or 
+          match_antedecent(left, right, first, second) or
           match_antedecent(left, right, second, first)
         if dynamic_match_antedecent(v_left, v_right, first_cond, second_cond) and
         equals(first_cond.right, expression) and equals(second_cond.right, expression)
           parsed.ok = true
         else
           return error.disjunction_elimination_references ast
-      
+
     CONDITIONAL: (ast, parsed)->
       expression = extract(parsed.expression)
       references = parsed.rule.references
@@ -306,7 +313,7 @@ do ->
         parsed.ok = true
       else
         return error.conditional_elimination_references ast
-      
+
     NEGATION: (ast, parsed)->
       expression = extract(parsed.expression)
       if expression.type isnt CONTRADICTION
@@ -323,7 +330,7 @@ do ->
         parsed.ok = true
       else
         return error.negation_elimination_references ast
-        
+
   introduction =
     CONJUNCTION: (ast, parsed)->
       expression = extract(parsed.expression)
@@ -336,7 +343,7 @@ do ->
         parsed.ok = true
       else
         error.conjunction_introduction_references ast, expression.left, expression.right
-              
+
     DISJUNCTION: (ast, parsed)->
       expression = extract(parsed.expression)
       if not expression.connector or expression.connector.type isnt DISJUNCTION
@@ -348,7 +355,7 @@ do ->
         parsed.ok = true
       else
         error.disjunction_introduction ast, expression.left, expression.right
-        
+
     CONDITIONAL:  (ast, parsed)->
       expression = extract(parsed.expression)
       if not expression.connector or expression.connector.type isnt CONDITIONAL
@@ -365,7 +372,7 @@ do ->
       if not equals(first_exp, expression.left) or not equals(last_exp, expression.right)
         return error.conditional_introduction ast, expression.left, expression.right
       parsed.ok = true
-      
+
     NEGATION: (ast, parsed)->
       expression = extract(parsed.expression)
       if expression.type isnt NEGATION
@@ -382,8 +389,8 @@ do ->
       if not equals(first_exp, expression.expression) or last_exp.type isnt CONTRADICTION
         return error.negation_introduction ast, expression.expression
       parsed.ok = true
-        
-  assertion = 
+
+  assertion =
     DOUBLE_NOT: (ast, parsed)->
       expression = extract(parsed.expression)
       references = parsed.rule.references
@@ -401,7 +408,7 @@ do ->
       if not equals(second_nested, expression)
         return error.double_negation_equal ast, unique_ref, second_nested
       parsed.ok = true
-        
+
     EFSQ: (ast, parsed)->
       expression = extract(parsed.expression)
       references = parsed.rule.references
@@ -413,7 +420,7 @@ do ->
       if unique_ref.type isnt CONTRADICTION
         return error.efsq_reference ast
       parsed.ok = true
-      
+
     REPEAT: (ast, parsed)->
       expression = extract(parsed.expression)
       references = parsed.rule.references
@@ -425,13 +432,13 @@ do ->
       if not equals(unique_ref, expression)
         return error.repeat_reference ast
       parsed.ok = true
-      
+
     E: (ast, parsed)->
       elimination[parsed.rule.connector.type](ast, parsed)
     I: (ast, parsed)->
       introduction[parsed.rule.connector.type](ast, parsed)
-  
-  processors =  
+
+  processors =
     PREMISE:
       process: (ast, parsed)->
         ast.current.children.push parsed
@@ -439,7 +446,7 @@ do ->
         ast.indices.push
           index: parsed.index
           klass: 'premise'
-          
+
     ASSERTION:
       process: (ast, parsed)->
         ast.current.children.push parsed
@@ -447,10 +454,10 @@ do ->
         ast.indices.push
           index: parsed.index
           klass: if parsed.iteration then 'supposed-end' else 'assertion'
-        
+
     SUPPOSED:
       process: (ast, parsed)->
-        node = 
+        node =
           type: ITERATION
           children: []
           parent: ast.current
@@ -461,31 +468,35 @@ do ->
         ast.indices.push
           index: parsed.index
           klass: 'supposed'
-        
+
     SUPPOSED_END:
       process: (ast, parsed)->
         #controlar que no sea un nuevo supuesto
         if ast.current.type isnt ITERATION
           return error.unexpected_close_iteration ast
+        if ast.current.children.length < 2
+          suposed = extract(ast.current.children[0].expression)
+          console.log(suposed)
+          return error.unique_element_iteration ast, suposed
         parsed.iteration = ast.current
         ast.current = ast.current.parent
         ast.supposed_end = false
         if parsed.type isnt ASSERTION
           return error.unexpected_after_iteration ast, parsed
-        #Importante: aca es donde se puede 
+        #Importante: aca es donde se puede
         #omitir la conclusión de la iteración
         processors.ASSERTION.process(ast, parsed)
-      
-  clean = (ast)->    
+
+  clean = (ast)->
     unless ast.current is ast.root or ast.error
       ast.error = true
       ast.current.children.push ERROR_ELEMENT.FINALIZACION_DENTRO_DE_ITERACION
     ast.length = ast.index-1
     delete ast.current
     delete ast.supposed_end
-    delete ast.index 
+    delete ast.index
     ast
-      
+
   validator.validate = (raw, parser)->
     lines = raw.split('\n')
     ast =
@@ -506,7 +517,7 @@ do ->
         parsed = parser.parse(line)
       catch err
         ast.error = true
-        context = 
+        context =
           rawLine: line.trim()
           parseError: err.message
         error_node = interpolates ERROR_ELEMENT.NO_SE_PUEDE_PARSEAR_LA_LINEA, context
@@ -525,7 +536,7 @@ do ->
       else
         if ast.index isnt parsed.index
           ast.error = true
-          context = 
+          context =
             rawLine: line.trim()
             expectedLineIndex: ast.index
           error_node = interpolates ERROR_ELEMENT.LINEA_NO_ESPERADA, context
@@ -541,8 +552,5 @@ do ->
       ast.error = true
       ast.root.children.push CLOSE_ITERATION_ERROR
       ast.root.children.push ERROR_ELEMENT.FINALIZACION_EN_CIERRE_DE_ITERACION
-      
-    return clean ast
-      
 
-      
+    return clean ast

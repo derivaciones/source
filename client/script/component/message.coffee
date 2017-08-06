@@ -47,6 +47,17 @@ window.ERROR_ELEMENT =
     content: 'Para cancelar un supuesto en el validador con << se requiere ' +
       'haber abierto previamente dicho supuesto. Es condición necesaria que ' +
       'haya un supuesto para que el mismo pueda ser cancelado'
+  CIERRE_ITERACION_ELEMENTO_UNICO:
+    context:
+      suposed: 'El supuesto que conforma la unica formula de la iteracion'
+    content: 'Para cancelar un supuesto en el validador con << se requiere ' +
+      'haber arribado a una nueva formula dentro del contexto de suposición ' + '\n' +
+      'Para el caso particular en el que se pretende generar A → A es ' +
+      'necesario utilizar la regla de repetición' + '\n' +
+	    '1:${suposed} supuesto' + '\n' +
+	    '2:${suposed} R(1)' + '\n' +
+	    '<<' + '\n' +
+	    '3:${suposed} → ${suposed} I→(1,2)'
   ELIMINACION_NEGACION_NO_CONTRADICCION:
     content: 'La aplicación de la regla de eliminación de la negación tiene ' +
       'como contenido una contradicción (⊥)'

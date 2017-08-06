@@ -22,6 +22,10 @@ window.onload = ->
 
 errors = [
 
+  " 1:q supuesto      \n" +
+  " <<                \n" +
+  " 2:q→q I→(1)     "
+
   " 1:¬q premisa      \n" +
   " 2:q→r premisa     \n" +
   " 3:q supuesto      "
@@ -60,9 +64,10 @@ errors = [
 
   " 1:r premisa       \n" +
   " 2:q→r supuesto    \n" +
+  " 3:q→r R(2)        \n" +
   " <<                \n" +
-  " 3:q supuesto      \n" +
-  " 4:(q→r)→q I→(2-3)   "
+  " 4:q supuesto      \n" +
+  " 5:(q→r)→q I→(2-4)   "
 
   " 1:¬(qΛr) premisa  \n" +
   " 2:(qΛr) premisa   \n" +

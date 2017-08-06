@@ -4,13 +4,13 @@ inputChange  = ->
 process      = ->
 writeInput   = ->
 inputMode    = ->
-  
+
 window.onload = ->
-  
+
   input        = document.querySelector('#input')
   process      = document.querySelector('#process')
   output       = document.querySelector('#output')
-  
+
   writeInput = (text)->
     text = text or ''
     #IE support
@@ -24,25 +24,25 @@ window.onload = ->
       endPos = input.selectionEnd
       input.value = input.value.substring(0, startPos) + text + input.value.substring(endPos, input.value.length)
       input.selectionEnd = endPos + text.length
-    else 
+    else
       input.value += text
     inputChange()
     input.focus()
-    
+
   MODE =
     INPUT:   'input-mode'
     OUTPUT:  'output-mode'
   MODE.CURRENT = MODE.INPUT
   ast = null
-  
+
   swapMode = (state)->
     document.body.classList.remove MODE.CURRENT
     MODE.CURRENT = state
     document.body.classList.add MODE.CURRENT
-      
+
   firstTime = ->
     window.location = 'first.html'
-  
+
   if typeof window.localStorage isnt 'undefined'
     storageKey = 'derivation.code'
     save        = (code) -> localStorage.setItem storageKey, code
@@ -54,36 +54,37 @@ window.onload = ->
       firstTime()
   else
     firstTime()
-    
+
   input.value = load()
-  
+
   previousActiveElement = null
-  
+
   mousedownHandler = (evn)->
-    previousActiveElement = document.activeElement  
-  process.addEventListener 'mousedown', mousedownHandler, false  
-  
+    previousActiveElement = document.activeElement
+  process.addEventListener 'mousedown', mousedownHandler, false
+
   processHandler = (evn)->
     while output.firstChild
       output.removeChild output.firstChild
     parser = new derivaciones.Parser
     ast = validator.validate(input.value, parser)
     if ast
+      console.log ast
       viewer.process(ast)
       output.appendChild ast.root.view
     previousActiveElement.focus()
     evn.preventDefault()
     swapMode(MODE.OUTPUT)
-    
-  process.addEventListener 'click', processHandler, false  
-  
-  
-  window.inputMode = -> 
+
+  process.addEventListener 'click', processHandler, false
+
+
+  window.inputMode = ->
     swapMode(MODE.INPUT)
-    
-  window.outputMode = -> 
+
+  window.outputMode = ->
     swapMode(MODE.OUTPUT)
-    
+
   actions = [
     keyCode: 69 #e
     char: '→'
@@ -107,6 +108,5 @@ window.onload = ->
         evnt.preventDefault()
         evnt.stopPropagation()
         return true
-      
-  input.addEventListener 'keydown', handleKey, false  
 
+  input.addEventListener 'keydown', handleKey, false
