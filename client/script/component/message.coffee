@@ -96,6 +96,20 @@ window.ERROR_ELEMENT =
       '4:s EV(1,2,3)' + '\n' +
       'Asegúrese también de indicar las referencias correctamente y verifique ' +
       'si efectivamente se encuentran disponibles los elementos señalados'
+  ELIMINACION_DISYUNCION_CONDICIONAL_UNICO:
+    context:
+      expression: ''
+      conditional: ''
+      disjuntion: ''
+    content: '' +
+      'La regla de eliminación de la disyunción requiere justificarse a ' +
+      'partir de tres fórmulas previas, no menos.' + '\n' +
+      'Para el caso particular en el que ambos disyuntos son idénticos,' +
+      'deberá usar la repetición para duplicar el condicional' + '\n' +
+      '1:${conditional} premisa' + '\n' +
+      '2:${disjunction} premisa' + '\n' +
+      '3:${conditional} R(1)' + '\n' +
+      '4:${expression} EV(1,2,3)'
   DOBLE_NEGACION_TIPO_REFERENCIAS_INVALIDAS:
     content: '' +
       'La regla de la doble negación únicamente puede aplicarse sobre una ' +

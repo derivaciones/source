@@ -95,6 +95,14 @@ do ->
     disjunction_elimination_references: (ast)->
       ast.error = true
       ast.current.children.push ERROR_ELEMENT.ELIMINACION_DISYUNCION_REFERENCIAS_INVALIDAS
+    disjunction_elimination_unique_conditional: (ast, expression, conditional, disjunction)->
+      ast.error = true
+      context =
+        conditional: print(conditional)
+        disjunction: print(disjunction)
+        expression:  print(expression)
+      error_node = interpolates ERROR_ELEMENT.ELIMINACION_DISYUNCION_CONDICIONAL_UNICO, context
+      ast.current.children.push error_node
     double_negation_unique_reference:(ast)->
       ast.error = true
       ast.current.children.push ERROR_ELEMENT.DOBLE_NEGACION_REFERENCIAS_MULTIPLES
@@ -288,7 +296,10 @@ do ->
         #case: pVp,p→s,s
         if match_antedecent(v_left, v_right, first_cond, first_cond) and
         equals(expression, first_cond.right)
-          parsed.ok = true
+          conditional = first_cond
+          disjunction = classified.disjunction
+          return error.disjunction_elimination_unique_conditional \
+            ast, expression, conditional, disjunction
         else
           return error.disjunction_elimination_references ast
       else #conditionals.length is 2
@@ -346,7 +357,7 @@ do ->
       previous = get_refs[references.type](ast, references, parsed.index)
       if ast.error then return
       if exist(expression.left, previous) and exist(expression.right, previous)
-        if previous.length isnt 2 or ( previous[0] is previous[1])          
+        if previous.length isnt 2 or ( previous[0] is previous[1])
           return error.conjunction_introduction_references_aridity ast, parsed
         parsed.ok = true
       else
