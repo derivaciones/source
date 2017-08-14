@@ -53,6 +53,12 @@ do ->
         rightExpression: print(right)
       error_node = interpolates ERROR_ELEMENT.INTRODUCCION_DISYUNCION_REFERENCIA_INVALIDA, context
       ast.current.children.push error_node
+    disjunction_introduction_references_aridity:(ast, parsed)->
+      ast.error = true
+      ast.current.children.push ERROR_ELEMENT.INTRODUCCION_DISYUNCION_REFERENCIA_EXTRA
+    conjunction_introduction_references_aridity:(ast, parsed)->
+      ast.error = true
+      ast.current.children.push ERROR_ELEMENT.INTRODUCCION_CONJUNTION_REFERENCIA_EXTRA
     conditional_connector: (ast)->
       ast.error = true
       ast.current.children.push ERROR_ELEMENT.INTRODUCCION_CONDICIONAL_CONECTOR_INCORRECTO
@@ -340,6 +346,8 @@ do ->
       previous = get_refs[references.type](ast, references, parsed.index)
       if ast.error then return
       if exist(expression.left, previous) and exist(expression.right, previous)
+        if previous.length isnt 2 or ( previous[0] is previous[1])          
+          return error.conjunction_introduction_references_aridity ast, parsed
         parsed.ok = true
       else
         error.conjunction_introduction_references ast, expression.left, expression.right
@@ -352,6 +360,8 @@ do ->
       previous = get_refs[references.type](ast, references, parsed.index)
       if ast.error then return
       if exist(expression.left, previous) or exist(expression.right, previous)
+        if previous.length isnt 1
+          return error.disjunction_introduction_references_aridity ast, parsed
         parsed.ok = true
       else
         error.disjunction_introduction ast, expression.left, expression.right

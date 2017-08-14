@@ -29,13 +29,13 @@ validate = [
   " <<                \n" +
   " 7:¬(q→r) I¬(3-6)   "
 
-  " 1. (p | t) → ¬¬r premisa      \n" +
+  " 1. (p v t) → ¬¬r premisa      \n" +
   " 2. ¬(p → r) premisa           \n" +
   "    -------------------        \n" +
   " 3.| (q → p) supuesto  |       \n" +
   "   | ----------------  |       \n" +
   " 4.|| p supuesto     | |       \n" +
-  " 5.|| (p | t) Iv(4)  | |       \n" +
+  " 5.|| (p v t) Iv(4)  | |       \n" +
   " 6.|| ¬¬r E→(1,5)    | |       \n" +
   " 7.|| r ¬¬(6)        | |       \n" +
   "   | ----------------  |       \n" +
@@ -80,7 +80,7 @@ validate = [
   " 1. q → r premisa        \n" +
   " 2. (t V u) → q premisa  \n" +
   " 3. ¬s → ¬¬q premisa     \n" +
-  " 4. (t V ¬s) supuesto    \n" +
+  " 4. (¬s V t) supuesto    \n" +
   " 5. ¬s supuesto          \n" +
   " 6. ¬¬q E→(3,5)          \n" +
   " 7. q ¬¬(6)              \n" +
@@ -96,15 +96,16 @@ validate = [
   "<<                       \n" +
   "15. (t V ¬s) → r I→(4-14)  "
 
-  " 1:¬¬(qVr) premisa \n" +
-  " 2:q→r premisa     \n" +
-  " 3:qVr ¬¬(1)         "
+  " 1. ¬q → r premisa \n" +
+  " 2: ¬r  premisa    \n" +
+  " 3. ¬q supuesto    \n" +
+  " 4. r E→(1,3)      \n" +
+  " 5. ⊥ E¬(2,4)         \n" +
+  " <<                \n" +
+  " 6. ¬¬q I¬(3-5)      "
 
-  " 1:qVq premisa     \n" +
-  " 2:q→r premisa     \n" +
-  " 3:r EV(1,2)         "
 
-  " 1:qVr premisa     \n" +
+  " 1:rVq premisa     \n" +
   " 2:r→s premisa     \n" +
   " 3:q→s premisa     \n" +
   " 4:s EV(1,2,3)         "
@@ -121,8 +122,6 @@ validate = [
   " <<               \n" +
   " 4:¬r → ⊥ I→(2-3)   "
 
-  " 1:q premisa      \n" +
-  " 2:q Λ q IΛ(1)"
 
   " 1:q premisa      \n" +
   " 2:r premisa      \n" +
@@ -133,4 +132,7 @@ validate = [
 
   " 1:q premisa      \n" +
   " 2:q V r IV(1)"
+
+  " 1:q premisa      \n" +
+  " 2:r V q IV(1)"
 ]

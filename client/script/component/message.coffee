@@ -80,7 +80,7 @@ window.ERROR_ELEMENT =
       '1:(pVq)→p premisa' + '\n' +
       '2:(pVq) premisa' + '\n' +
       '3:p E→(1,2)' + '\n' +
-      'Asegurece también de indicar las referencias correctamente y si ' +
+      'Asegúrese también de indicar las referencias correctamente y si ' +
       'efectivamente responden al esquema señalado'
   ELIMINACION_DISYUNCION_REFERENCIAS_INVALIDAS:
     content: '' +
@@ -94,7 +94,7 @@ window.ERROR_ELEMENT =
       '2:p→s premisa' + '\n' +
       '3:q→s premisa' + '\n' +
       '4:s EV(1,2,3)' + '\n' +
-      'Asegurece también de indicar las referencias correctamente y verifique ' +
+      'Asegúrese también de indicar las referencias correctamente y verifique ' +
       'si efectivamente se encuentran disponibles los elementos señalados'
   DOBLE_NEGACION_TIPO_REFERENCIAS_INVALIDAS:
     content: '' +
@@ -102,7 +102,7 @@ window.ERROR_ELEMENT =
       'fórmula que se encuentra afectada por dos negaciones. Por ejemplo:' + '\n' +
       '1:¬¬(pVq) premisa' + '\n' +
       '2:(pVq) ¬¬(1)' + '\n' +
-      'Asegurece también de indicar las referencias correctamente'
+      'Asegúrese también de indicar las referencias correctamente'
   DOBLE_NEGACION_RESULTADO_INVALIDO:
     context:
       dobleNegacionReferida: 'formula a la que se hace referencia en la regla. Corresponde a una doble negación'
@@ -140,7 +140,11 @@ window.ERROR_ELEMENT =
       'se debe remitir a al menos uno de los dos disyuntos que la conforman' + '\n' +
       '${leftExpression}' + '\n' +
       '${rightExpression}' + '\n' +
-      'Asegurece también de indicar las referencias correctamente'
+      'Asegúrese también de indicar las referencias correctamente'
+  INTRODUCCION_DISYUNCION_REFERENCIA_EXTRA:
+    content: '' +
+      'Para aplicar correctamente la regla de introducción de la disyunción ' +
+      'se debe remitir a una única referencia'
   INTRODUCCION_CONJUNCION_REFERENCIA_INVALIDA:
     context:
       leftExpression: 'la fórmula a la izquierda del conector Λ'
@@ -150,7 +154,17 @@ window.ERROR_ELEMENT =
       'debe remitir a las dos formulas que la conforman' + '\n' +
       '${leftExpression}' + '\n' +
       '${rightExpression}' + '\n' +
-      'Asegurece también de indicar las referencias correctamente'
+      'Asegúrese también de indicar las referencias correctamente'
+  INTRODUCCION_CONJUNTION_REFERENCIA_EXTRA:
+    content: '' +
+      'Para aplicar correctamente la regla de introducción la conjunción ' +
+      'se debe remitir a dos referencias distintas' + '\n' +
+      'Para el caso particular en el que se pretende demostrar: ' + '\n' +
+      'A → (A Λ A)' + '\n' +
+      'Deberá utilizarse la repetición' + '\n' +
+      '1: A premisa' + '\n' +
+      '2: A R(1)' + '\n' +
+      '3: A Λ A IΛ(1,2)'
   ITERACION_REFERENCIA_INVALIDA:
     context:
       firstReferenceIndex: 'el número de la línea donde se hizo inicialmente el supuesto (primera linea de la iteracion)'

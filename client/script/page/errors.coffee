@@ -20,6 +20,16 @@ window.onload = ->
 
 errors = [
 
+  " 1:q premisa      \n" +
+  " 2:q ∧ q I∧(1,1)   "
+
+  " 1:q premisa      \n" +
+  " 2:q ∧ q I∧(1)    "
+
+  " 1:q premisa      \n" +
+  " 2:q V r IV(1)    \n" +
+  " 3:q V (q V r) IV(1,2)"
+
   " 1:q supuesto      \n" +
   " <<                \n" +
   " 2:q→q I→(1)     "
