@@ -1,0 +1,54 @@
+@mixin xs {
+  @media (min-width: $xs-breake) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (min-width: $sm-breake) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: $md-breake) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: $lg-breake) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: $xl-breake) {
+    @content;
+  }
+}
+
+@mixin xxl {
+  @media (min-width: $xxl-breake) {
+    @content;
+  }
+}
+
+@mixin full-height-sm{
+  @media (min-height: $ide-height-breake) and (min-width: $sm-breake) {
+    @content;
+  }
+}
+
+@mixin rotate ($deg) {
+  @include transform(rotate(#{$deg}deg));
+}
+
+@keyframes move {
+  0% {
+    padding-left: 0;
+  }
+  100% {
+    padding-left: 15px;
+  }
+}

@@ -10,6 +10,7 @@ window.onload = ->
   input        = document.querySelector('#input')
   process      = document.querySelector('#process')
   output       = document.querySelector('#output')
+  body         = document.querySelector('body')
 
   writeInput = (text)->
     text = text or ''
@@ -42,16 +43,28 @@ window.onload = ->
 
   firstTime = ->
     window.location = 'first.html'
+  fullView = ->
+    body.classList.add('full')
 
   if typeof window.localStorage isnt 'undefined'
-    storageKey = 'derivation.code'
+    storageKey  = 'derivation.code'
     save        = (code) -> localStorage.setItem storageKey, code
     load        = (code) -> localStorage.getItem storageKey
     inputChange =        -> save input.value
-    visitKey  = 'derivation.visit'
+    visitKey    = 'derivation.visit'
     if not localStorage.getItem visitKey
       localStorage.setItem visitKey, true
       firstTime()
+    fullKey     = 'derivation.full'
+    if not localStorage.getItem fullKey
+      listener = ()->
+        document.removeEventListener("click", listener)
+        localStorage.setItem fullKey, true
+        fullView()
+      document.addEventListener("click", listener);
+    else
+      fullView()
+
   else
     firstTime()
 

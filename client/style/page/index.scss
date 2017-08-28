@@ -1,10 +1,12 @@
-@import '../layout/full';
-@import '../template/input';
-@import '../template/menu';
-@import '../template/output';
-@import '../template/viewer';
+@import '../variables';
+@import '../mixins';
+@import '../layout/ide';
 
-$collapsed-width: 6%;
+//@import '../template/input';
+@import '../template/menu';
+// @import '../template/output';
+@import '../template/viewer';
+//
 
 .input-container,
 .output-container{
@@ -13,92 +15,155 @@ $collapsed-width: 6%;
   transition: all 0.5s;
   box-sizing: border-box;
   height: 100%;
+  width: 100%;
   overflow: hidden;
 }
+
 .input-container{
-  width: 60%;
+  background-color: magenta;
+  #input{
+    transition: all 0.5s;
+    min-height: $input-min-height;
+    height: auto;
+    width: 100%;
+    display: block;
+  }
 }
 .output-container{
-  width: 40%;
+  background-color: green;
 }
 .output-mode{
-  .input-container{
-    width: 40%;
-  }
-  .output-container{
-    width: 60%;
-  }
-}
-
-#input,
-#output{
-  width: 100%;
-  height: 100%;
-  margin: 0px;
-  box-sizing: border-box;
-}
-
-.output-container{
-  #output{
-    overflow-y: auto;
-  }
-}
-.input-container{
   #input{
-    white-space: nowrap;
+    min-height: 20px;
   }
 }
 
-
-@media only screen and (min-width: 640px){
-  @media (max-height: 500px) {
+@include sm{
+  main{
+    .input-container,
+    .output-container{
+    }
     .input-container{
-      height: 500px;
+      width: 60%;
+      min-height: $input-min-height;
     }
     .output-container{
-      height: 500px;
+      width: 40%;
+    }
+  }
+  body.output-mode{
+    main{
+      .input-container{
+        width: 40%;
+      }
+      .output-container{
+        width: 60%;
+      }
     }
   }
 }
-
-@media only screen and (min-width: 640px) and (max-width: 960px){
-
-  .input-container{
-    width: 90%;
-  }
-  .output-container{
-    width: 10%;
-  }
-
-  .output-mode{
+@include md{
+  main{
     .input-container{
-      width: 10%;
+      width: 70%;
     }
     .output-container{
-      width: 90%;
+      width: 30%;
     }
-    #input{
-      overflow:hidden;
+  }
+  body.output-mode{
+    main{
+      .input-container{
+        width: 30%;
+      }
+      .output-container{
+        width: 70%;
+      }
     }
   }
 }
 
-@media only screen and (max-width: 639px){
-  .input-container{
-    height: auto;
-    width: 100%;
-    clear: both;
-    #input{
-      height: auto;
-      min-height: 320px;
+@include full-height-sm{
+  main{
+    .input-container{
+      #input{
+        min-height: auto;
+        height: 100%;
+      }
     }
-  }
-  .output-container{
-    width: 100%;
-    height: auto;
-    #output{
-      min-height: 300px;
-    }
-    padding-left: 0;
   }
 }
+
+//
+// #input,
+// #output{
+//   width: 100%;
+//   height: 100%;
+//   margin: 0px;
+//   box-sizing: border-box;
+// }
+//
+// .output-container{
+//   #output{
+//     overflow-y: auto;
+//   }
+// }
+// .input-container{
+//   #input{
+//     white-space: nowrap;
+//   }
+// }
+//
+//
+// @media only screen and (min-width: 640px){
+//   @media (max-height: 500px) {
+//     .input-container{
+//       height: 500px;
+//     }
+//     .output-container{
+//       height: 500px;
+//     }
+//   }
+// }
+//
+// @media only screen and (min-width: 640px) and (max-width: 960px){
+//
+//   .input-container{
+//     width: 90%;
+//   }
+//   .output-container{
+//     width: 10%;
+//   }
+//
+//   .output-mode{
+//     .input-container{
+//       width: 10%;
+//     }
+//     .output-container{
+//       width: 90%;
+//     }
+//     #input{
+//       overflow:hidden;
+//     }
+//   }
+// }
+//
+// @media only screen and (max-width: 639px){
+//   .input-container{
+//     height: auto;
+//     width: 100%;
+//     clear: both;
+//     #input{
+//       height: auto;
+//       min-height: 320px;
+//     }
+//   }
+//   .output-container{
+//     width: 100%;
+//     height: auto;
+//     #output{
+//       min-height: 300px;
+//     }
+//     padding-left: 0;
+//   }
+// }
