@@ -1,43 +1,45 @@
 body main .menu-container{
   width: 100%;
   .menu{
-    top: 2px;
-    left: 2px;
+    top: 1px;
+    left: 1px;
     .menu-button-text,
     .menu-button-icon,
     .menu-button{
       border: none;
-      color: #00897B;
+      color: #2196f3;
       text-align: center;
       text-decoration: none;
       display: inline-block;
       cursor: pointer;
       transition: all 0.5s;
       position: relative;
-      width: 50px;
-      height: 30px;
-      border: 2px solid #00897B;
+      width: 30px;
+      height: 20px;
+      border: 1px solid #3f51b5;
       background-color: transparent;
       margin: 2px;
       float: left;
-      //clear: right;
+    }
+    .menu-button-icon,
+    .menu-button{
       > *{
         vertical-align: middle;
       }
     }
     .menu-button-icon{
       font-size: 12px;
-      padding: 6px 5px 2px 5px;
-      .fa{
-        position: relative;
-        top: -2px;
-      }
+      // padding: 6px 5px 2px 5px;
+      // .fa{
+      //   position: relative;
+      //   top: -2px;
+      // }
     }
     .menu-button-text{
       font-weight: bold;
       font-size: 12px;
       line-height: 12px;
-      padding: 6px 5px 8px 5px;
+      //padding: 6px 5px 8px 5px;
     }
     .menu-button{
       font-weight: bold;
@@ -50,6 +52,8 @@ body.full{
     top: $header-height;
   }
 }
+
+
 
 @include sm{
   body main .menu-container{
@@ -65,8 +69,40 @@ body.full{
   }
 }
 
+@include md{
+  body main .menu-container{
+    width: 100%;
+    .menu{
+      top: 2px;
+      left: 2px;
+      .menu-button-text,
+      .menu-button-icon,
+      .menu-button{
+        color: #00897B;
+        width: 40px;
+        height: 25px;
+        border: 1px solid #00897B;
+        margin: 2px;
+      }
+      .menu-button-icon{
+        font-size: 12px;
+        .fa{
+          top: -2px;
+        }
+      }
+      .menu-button-text{
+        font-weight: bold;
+        font-size: 12px;
+      }
+      .menu-button{
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+  }
+}
 
-@include full-height-sm{
+@include sm-full-height{
   body.full,
   body {
     main .menu-container{
@@ -75,25 +111,6 @@ body.full{
       .menu{
         top: auto;
         bottom: 2px;
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 640px) and (max-width: 960px){
-  .output-mode{
-    .menu-container{
-      // right: 0;
-      .menu{
-        .menu-button-text,
-        .menu-button-icon,
-        .menu-button{
-          //font-size: 1px;
-          // width: 0px;
-          // padding-left: 0;
-          // padding-right: 0;
-          // border: none;
-         }
       }
     }
   }

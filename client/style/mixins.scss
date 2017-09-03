@@ -34,8 +34,13 @@
   }
 }
 
-@mixin full-height-sm{
+@mixin sm-full-height{
   @media (min-height: $ide-height-breake) and (min-width: $sm-breake) {
+    @content;
+  }
+}
+@mixin md-full-height{
+  @media (min-height: $ide-height-breake) and (min-width: $md-breake) {
     @content;
   }
 }

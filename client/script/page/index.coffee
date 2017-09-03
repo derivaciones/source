@@ -110,6 +110,9 @@ window.onload = ->
   ,
     keyCode: 70 #f
     char: 'Λ'
+  ,
+    keyCode: 71 #g
+    char: '¬'
   ]
 
   handleKey = (evnt)->

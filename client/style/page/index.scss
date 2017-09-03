@@ -2,11 +2,11 @@
 @import '../mixins';
 @import '../layout/ide';
 
-//@import '../template/input';
+@import '../template/input';
 @import '../template/menu';
-// @import '../template/output';
+@import '../template/output';
 @import '../template/viewer';
-//
+
 
 .input-container,
 .output-container{
@@ -20,7 +20,7 @@
 }
 
 .input-container{
-  background-color: magenta;
+  padding-top: 2px;
   #input{
     transition: all 0.5s;
     min-height: $input-min-height;
@@ -30,7 +30,10 @@
   }
 }
 .output-container{
-  background-color: green;
+  padding-top: 2px;
+  #output{
+    min-height: $output-min-height;
+  }
 }
 .output-mode{
   #input{
@@ -42,13 +45,20 @@
   main{
     .input-container,
     .output-container{
+      padding-top: 28px;
     }
     .input-container{
       width: 60%;
-      min-height: $input-min-height;
+      padding-right: 2px;
+      #input{
+        min-height: $input-min-height;
+      }
     }
     .output-container{
       width: 40%;
+      #output{
+        min-height: $input-min-height;
+      }
     }
   }
   body.output-mode{
@@ -83,8 +93,12 @@
   }
 }
 
-@include full-height-sm{
+@include sm-full-height{
   main{
+    .input-container,
+    .output-container{
+      padding-top: 2px;
+    }
     .input-container{
       #input{
         min-height: auto;
