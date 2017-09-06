@@ -1,0 +1,114 @@
+$sidebar-hover: #008fCD;
+$sidebar-active: #008fCD;
+
+.sidebar{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1px;
+  transition: all 0.5s;
+  height: 0px;
+  overflow: hidden;
+  ul{
+    transition: all 0.5s;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    float: left;
+  }
+  li{
+    display: block;
+    box-sizing: border-box;
+    padding: 1px;
+    width: 50%;
+    float: left;
+  }
+  a{
+    box-sizing: border-box;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+    padding: 5px;
+    background-color: #00bfff;
+    color: #FFF;
+    font-weight: 600;
+    font-family: monospace;
+    .active,
+    &:hover{
+      background-color: $sidebar-hover;
+    }
+  }
+}
+
+.show-sidebar{
+  .sidebar{
+    height: auto;
+  }
+}
+
+@include xs{
+  .show-sidebar{
+    .sidebar{
+      li{
+        width: 33.33%;
+      }
+    }
+  }
+}
+
+@include sm{
+  body.show-sidebar div.sidebar,
+  body div.sidebar{
+    top: $header-height-init;
+    position: absolute;
+    z-index: 2;
+    width: 0px;
+    height: auto;
+    ul{
+      margin-top: 26px;
+      width: 100%;
+      li{
+        padding: 1px;
+        width: 100%;
+      }
+    }
+  }
+  body.show-sidebar{
+    div.sidebar{
+      width: $sidebar-width;
+    }
+    main{
+      padding-left: $sidebar-width;
+    }
+  }
+  body.full,
+  body.show-sidebar.full{
+    div.sidebar{
+      top: $header-height;
+    }
+  }
+}
+
+@include md{
+  body.show-sidebar div.sidebar,
+  body div.sidebar{
+    ul{
+      margin-top: 31px;
+    }
+  }
+}
+
+@include sm-full-height{
+  body.show-sidebar div.sidebar,
+  body div.sidebar{
+    ul{
+      margin-top: 0px;
+    }
+  }
+}
+
+.help-page .help-link,
+.index-page .index-link,
+.examples-page .examples-link{
+  background-color: $sidebar-active;
+  color: #00Dfff;
+}

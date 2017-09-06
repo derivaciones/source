@@ -5,7 +5,7 @@ process      = ->
 writeInput   = ->
 inputMode    = ->
 
-window.onload = ->
+window.addLoadListener ->
 
   input        = document.querySelector('#input')
   process      = document.querySelector('#process')

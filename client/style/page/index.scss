@@ -80,6 +80,10 @@
     .output-container{
       width: 30%;
     }
+    .input-container,
+    .output-container{
+      padding-top: 33px;
+    }
   }
   body.output-mode{
     main{
@@ -107,6 +111,8 @@
     }
   }
 }
+
+
 
 //
 // #input,

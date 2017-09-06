@@ -1,6 +1,10 @@
 @import 'variables';
 @import 'mixins';
 
+@import 'template/sidebar';
+
+$menu-togler-offset: 24px;
+
 .no-href{
   cursor: pointer;
 }
@@ -9,7 +13,6 @@ body{
   margin: 0px;
   width: 100%;
   height: auto;
-  //overflow: hidden;
 }
 
 header{
@@ -18,18 +21,17 @@ header{
   border-bottom: solid 1px #275da1;
   height: $header-height-xxs;
   width: 100%;
-  transition: height .5s, padding .5s;
+  transition: all .5s;
   a{
     text-decoration: none;
   }
   box-sizing: border-box;
-  position: absolute;
-  z-index: 1;
   padding: 0;
   .toggle-menu{
+    transition: all .5s;
     color: #DDD;
     position: absolute;
-    bottom: 1px;
+    top: $header-height-xxs - $menu-togler-offset;
     left: 7px;
     &:hover{
       color: #FFF;
@@ -39,34 +41,17 @@ header{
     position: relative;
     width: 100%;
     padding: 0px;
-
     .index-link{
       h1{
         color: #fff;
         margin: 0;
         margin-left: 5px;
         font-weight: normal;
-
         font-size: 1.2rem;
         text-align: center;
         transition: all 0.5s;
-        @include xs{
-          font-size: 2.0rem;
-        }
-        @include sm{
-          margin-right: 100px;
-          line-height: $header-height;
-          font-size: 2.8rem;
-        }
-        @include md{
-          font-size: 3.2rem;
-        }
-        @include lg{
-          font-size: 3.8rem;
-        }
       }
     }
-
     .github-link{
       border: 1px solid white;
       border-radius: 5px;
@@ -146,9 +131,28 @@ header{
   }
 }
 
+main{
+  transition: all 0.5s;
+  background-color: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0px;
+}
+
 @include xs{
   header{
+    height: $header-height-init;
+    .toggle-menu{
+      top: $header-height-init - $menu-togler-offset;
+    }
     .header-inner{
+      .index-link{
+        h1{
+          font-size: 2.4rem;
+          text-align: left;
+          line-height: normal;
+        }
+      }
       .github-link{
         border: 1.3px solid white;
         border-radius: 10px;
@@ -206,15 +210,43 @@ header{
             width: 65px;
             margin-left: 5px;
           }
-
+        }
+      }
+    }
+  }
+  body.full{
+    header{
+      height: $header-height;
+      .toggle-menu{
+        top: $header-height - $menu-togler-offset;
+      }
+      .header-inner{
+        .index-link{
+          h1{
+            font-size: 1.2rem;
+            text-align: left;
+            line-height: normal;
+            margin-left: 7px;
+          }
         }
       }
     }
   }
 }
+
+
 @include sm{
   header{
+    position: absolute;
+    z-index: 1;
     .header-inner{
+      .index-link{
+        h1{
+          margin-right: 100px;
+          line-height: $header-height;
+          font-size: 2.8rem;
+        }
+      }
       .github-link{
         border: 2px solid white;
         border-radius: 15px;
@@ -240,7 +272,6 @@ header{
           .github-arrow{
             opacity: 0;
             font-size: 16px;
-
           }
         }
         &:hover{
@@ -252,9 +283,10 @@ header{
       }
     }
   }
-}
-
-@include sm{
+  main{
+    position: absolute;
+    padding-top: $header-height-init;
+  }
   body.full{
     header{
       .header-inner{
@@ -311,38 +343,17 @@ header{
               width: 65px;
               margin-left: 5px;
             }
-
           }
         }
       }
     }
-  }
-}
-
-main{
-  background-color: inherit;
-  top: 0;
-  position: absolute;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0px;
-  padding-top: $header-height-xxs;
-}
-
-@include xs{
-
-  header{
-    height: $header-height-init;
-    .header-inner{
-      .index-link{
-        h1{
-          font-size: 2.4rem;
-          text-align: left;
-          line-height: normal;
-        }
-      }
+    main{
+      padding-top: $header-height;
     }
   }
+}
+
+@include md{
   main{
     padding-top: $header-height-init;
   }
@@ -350,21 +361,30 @@ main{
     main{
       padding-top: $header-height;
     }
-    header{
-      height: $header-height;
-      .header-inner{
-        .index-link{
-          h1{
-            font-size: 1.2rem;
-            text-align: left;
-            line-height: normal;
-            margin-left: 7px;
-          }
+  }
+  header{
+    .header-inner{
+      .index-link{
+        h1{
+          font-size: 3.2rem;
         }
       }
     }
   }
 }
+
+@include lg{
+  header{
+    .header-inner{
+      .index-link{
+        h1{
+          font-size: 3.8rem;
+        }
+      }
+    }
+  }
+}
+
 
 
 
