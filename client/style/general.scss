@@ -58,7 +58,7 @@ header{
       position: absolute;
       float: right;
       top: 2px;
-      right: 2px;
+      right: 10px;
       padding: 0px;
       font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
       color: #fff;
@@ -159,7 +159,7 @@ main{
         position: absolute;
         float: right;
         top: 6px;
-        right: 4px;
+        right: 10px;
         padding: 0px;
         font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
         color: #fff;
@@ -243,7 +243,8 @@ main{
       .index-link{
         h1{
           margin-right: 100px;
-          line-height: $header-height;
+          margin-top: 0px;
+          line-height: normal;
           font-size: 2.8rem;
         }
       }
@@ -253,7 +254,7 @@ main{
         top: 10px;
         .github-left{
           width: 32px;
-          padding: 12px 0px 5px 10px;
+          padding: 10px 0px 7px 10px;
           .github-logo{
             width: 32px;
           }
@@ -264,6 +265,7 @@ main{
           .follow-me{
             font-size: 11px;
             line-height: 23px;
+            margin-top: 2px;
           }
           .github{
             font-size: 23px;
@@ -275,9 +277,19 @@ main{
           }
         }
         &:hover{
+          .github-left{
+            width: 32px;
+            padding: 10px 0px 7px 10px;
+            .github-logo{
+              width: 32px;
+            }
+          }
           .github-right{
             width: 115px;
             margin-left: 10px;
+            .follow-me{
+              margin-top: 2px;
+            }
           }
         }
       }
@@ -296,7 +308,7 @@ main{
           position: absolute;
           float: right;
           top: 6px;
-          right: 4px;
+          right: 10px;
           padding: 0px;
           .github-left{
             float:left;
@@ -366,7 +378,7 @@ main{
     .header-inner{
       .index-link{
         h1{
-          font-size: 3.2rem;
+
         }
       }
     }
@@ -378,7 +390,7 @@ main{
     .header-inner{
       .index-link{
         h1{
-          font-size: 3.8rem;
+
         }
       }
     }

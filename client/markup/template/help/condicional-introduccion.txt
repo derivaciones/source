@@ -1,0 +1,6 @@
+1. p → q premisa        
+2. p supuesto         
+3. q E →(1,2)      
+4. q v r Iv(3)       
+  <<                    
+5. p → (q v r) I→(2-4) 

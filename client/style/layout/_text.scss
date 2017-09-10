@@ -1,0 +1,61 @@
+main{
+  .content-wrapper{
+    margin-left: 10px;
+    margin-right: 10px;
+    p{
+      font-family: Georgia,Cambria,serif;
+    }
+  }
+}
+
+@include xs{
+
+}
+
+.text-justify{
+  text-align: justify;
+}
+
+ul.index{
+  list-style-type: none;
+  padding-left: 10px;
+  a,
+  a:hover{
+    line-height: 1.5rem;
+    text-decoration: none;
+  }
+  a{
+    color: #555;
+  }
+  a:hover{
+    color: #333;
+
+  }
+  i{
+    font-size: 1rem;
+  }
+
+}
+
+ol.number-list{
+  li{
+    padding-bottom: 15px;
+  }
+}
+
+@include xs{
+  pre,
+  .ml-xs-1{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+
+code.inline{
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+  font-family: monospace,monospace;
+  padding: 2px 4px;
+}

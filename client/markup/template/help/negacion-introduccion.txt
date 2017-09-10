@@ -1,0 +1,7 @@
+1. p→¬q premisa
+2. q premisa
+3. p supuesto
+4. ¬q  E→(1,3)
+5. ⊥ E¬(2,4)
+  << 
+6:¬p I¬(3-5)

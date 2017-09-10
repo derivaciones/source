@@ -1,0 +1,4 @@
+1. p ∨ q premisa        
+2. p → (q v r) premisa 
+3. q → (q v r) premisa  
+4. q v r Ev(1, 2, 3) 

@@ -10,7 +10,6 @@ window.addLoadListener ->
   input        = document.querySelector('#input')
   process      = document.querySelector('#process')
   output       = document.querySelector('#output')
-  body         = document.querySelector('body')
 
   writeInput = (text)->
     text = text or ''
@@ -44,7 +43,7 @@ window.addLoadListener ->
   firstTime = ->
     window.location = 'first.html'
   fullView = ->
-    body.classList.add('full')
+    document.body.classList.add('full')
 
   if typeof window.localStorage isnt 'undefined'
     storageKey  = 'derivation.code'
@@ -64,7 +63,6 @@ window.addLoadListener ->
       document.addEventListener("click", listener);
     else
       fullView()
-
   else
     firstTime()
 
