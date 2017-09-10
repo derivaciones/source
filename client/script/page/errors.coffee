@@ -1,6 +1,6 @@
 
-window.onload = ->
-  errorsInput = document.querySelector('#errorsPreety')
+window.addLoadListener ->
+  errorsInput = document.querySelector('#errors')
   parser = new derivaciones.Parser
   for error, index in errors
     ast = validator.validate(error, parser)

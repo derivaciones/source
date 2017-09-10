@@ -1,6 +1,6 @@
 
-window.onload = ->
-  validateInput = document.querySelector('#validatePreety')
+window.addLoadListener ->
+  validateElem = document.querySelector('#validate')
   parser = new derivaciones.Parser
   for example, index in validate
     ast = validator.validate(example, parser)
@@ -8,15 +8,15 @@ window.onload = ->
       viewer.process(ast)
       ast.root.view.title = example
       container = document.createElement 'div'
-      container.classList.add 'valid-container'
+      container.classList.add 'validate-container'
       codeElem = document.createElement 'pre'
       container.appendChild codeElem
       container.appendChild ast.root.view
       rawContent = document.createTextNode example
       codeElem.appendChild rawContent
-      validateInput.appendChild container
+      validateElem.appendChild container
     else
-      validateInput.appendChild document.createTextNode('error al procesar')
+      validateElem.appendChild document.createTextNode('error al procesar')
 
 validate = [
 

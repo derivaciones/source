@@ -8,5 +8,15 @@
     box-sizing: border-box;
     padding-right: 0px;
     height: 100%;
+    .placehoder{
+      line-height: 2rem;
+      color: #AAF;
+      .procesar{
+        padding: 4px 4px 2px 4px;
+        background-color: #AAF;
+        color: #33F;
+      }
+
+    }
   }
 }
