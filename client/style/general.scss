@@ -3,7 +3,7 @@
 
 @import 'template/sidebar';
 
-$menu-togler-offset: 24px;
+$menu-togler-offset: 31px;
 
 .no-href{
   cursor: pointer;
@@ -29,10 +29,11 @@ header{
   padding: 0;
   .toggle-menu{
     transition: all .5s;
+    padding: 7px;
     color: #DDD;
     position: absolute;
     top: $header-height-xxs - $menu-togler-offset;
-    left: 7px;
+    left: 0px;
     &:hover{
       color: #FFF;
     }
@@ -45,7 +46,9 @@ header{
       h1{
         color: #fff;
         margin: 0;
-        margin-left: 5px;
+        //margin-left: 5px;
+        margin-left: 50px;
+        margin-right: 100px;
         font-weight: normal;
         font-size: 1.2rem;
         text-align: center;
@@ -148,6 +151,7 @@ main{
     .header-inner{
       .index-link{
         h1{
+          margin-left: 7px;
           font-size: 2.4rem;
           text-align: left;
           line-height: normal;
@@ -242,8 +246,9 @@ main{
     .header-inner{
       .index-link{
         h1{
+          text-align: center;
           margin-right: 100px;
-          margin-top: 0px;
+          padding-top: 10px;
           line-height: normal;
           font-size: 2.8rem;
         }
@@ -302,6 +307,12 @@ main{
   body.full{
     header{
       .header-inner{
+        .index-link{
+          h1{
+            text-align: left;
+            padding-top: 0px;
+          }
+        }
         .github-link{
           border: 1.3px solid white;
           border-radius: 10px;
