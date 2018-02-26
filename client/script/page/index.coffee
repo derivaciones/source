@@ -97,17 +97,23 @@ window.addLoadListener ->
     swapMode(MODE.OUTPUT)
 
   actions = [
-    keyCode: 69 #e
-    char: '→'
-  ,
-    keyCode: 82 #r
-    char: '⊥'
+    keyCode: 81 #q
+    char: 'Λ'
   ,
     keyCode: 68 #d
     char: 'V'
   ,
-    keyCode: 70 #f
-    char: 'Λ'
+    keyCode: 72 #h
+    char: '∀'
+  ,
+    keyCode: 89 #y
+    char: '∃'
+  ,
+    keyCode: 79 #o
+    char: '→'
+  ,
+    keyCode: 74 #j
+    char: '⊥'
   ,
     keyCode: 71 #g
     char: '¬'

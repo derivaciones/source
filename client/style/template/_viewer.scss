@@ -3,7 +3,10 @@
   margin: 0px;
   size: 16px;
   line-height: 16px;
-  display: inline-flex;
+  // display: inline-flex;
+  padding-left: 15px;
+  position: relative;
+
   .lines{
     float: left;
     display: inline-block;
@@ -12,30 +15,48 @@
     float: left;
     clear:left;
   }
-  .index-container{
-    float: left;
-    display: inline-block;
-    .index{
-      min-width: 10px;
-      text-align: right;
-      color: #0AA;
-      margin-right: 5px;
-      display: block;
-      float: left;
-      clear:left;
-      &.supposed{
-        margin-top: 24px;
-      }
-      &.supposed-end{
-        margin-top: 24px;
-      }
-    }
-    &.index-container-2{
-      .index{
-        min-width: 15px;
-      }
+  // .index-container{
+  //   float: left;
+  //   display: inline-block;
+  //   .index{
+  //     min-width: 10px;
+  //     text-align: right;
+  //     color: #0AA;
+  //     margin-right: 5px;
+  //     display: block;
+  //     float: left;
+  //     clear:left;
+  //     &.supposed{
+  //       margin-top: 24px;
+  //     }
+  //     &.supposed-end{
+  //       margin-top: 24px;
+  //     }
+  //   }
+  //   &.index-container-2{
+  //     .index{
+  //       min-width: 15px;
+  //     }
+  //   }
+  // }
+  .index-left{
+    position: absolute;
+    left: -5px;
+  }
+  &.level-2{
+    padding-left: 20px;
+    .index-left{
+      left: -15px;
     }
   }
+  .index-left-level{
+    position: absolute;
+    left: -11px;
+  }
+  .index-left-text{
+    color: #0AA;
+  }
+  .comment,
   .premise,
   .supposed,
   .assertion,
@@ -44,6 +65,15 @@
     >*{
       float: left;
     }
+  }
+  .comment,
+  .premise,
+  .supposed,
+  .assertion{
+    position: relative;
+  }
+  .comment{
+    color: #6495ed;
   }
   .state-error,
   .state-not-ok,
@@ -123,8 +153,21 @@
     display: inline-block;
     float:left;
   }
-  .binary{
+  .exist,
+  .forall,
+  .binary,
+  .application{
     display: inline;
+  }
+  .exist,
+  .forall{
+    .element,
+    .identifier{
+      margin-right: 4px;
+    }
+    .identifier{
+      color: #066;
+    }
   }
   .close-exp{
     display: inline;

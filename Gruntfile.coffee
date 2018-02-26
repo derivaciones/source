@@ -68,7 +68,7 @@ module.exports = (grunt) ->
         files: ['<%= yeoman.src %>/**/*.{html,html,txt}']
         tasks: ['copy:text','preprocess:server','bake:server']
       generate:
-        files: ['source/elementos.jison']
+        files: ['source/derivaciones.jison']
         tasks: ['generate']
       assets:
         files: ['<%= yeoman.src %>/**/*.{jpg,jpg,png}']
@@ -230,7 +230,9 @@ module.exports = (grunt) ->
     ]
     for command in commands
       grunt.log.write command + '\n'
-      exec command, cdw: __dirname
+      result = exec command, cdw: __dirname
+      grunt.log.write result
+
 
   grunt.registerTask 'server', (target) ->
     grunt.task.run [

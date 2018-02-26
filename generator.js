@@ -20,15 +20,16 @@ var arg_options = {};
 fs.readFile('./source/derivaciones.jison', 'utf8', function (err,data) {
   if (err) {
     return console.log(err);
-  }  
+  }
   var parser = new Parser(data);
-  var parserSource = parser.generate({moduleName: 'derivaciones'});
+  var parserSource = parser.generate({ moduleName: 'derivaciones' });
+  console.log('parser generation successfully');
   var dest_path = './' + (arg_options.dest || 'dist/derivaciones.js');
   var dest = path.parse(dest_path);
-  mkdirp(dest.dir, function(err) { 
+  mkdirp(dest.dir, function(err) {
     if (err) {
       return console.log(err);
-    }  
-    fs.writeFile(dest_path, parserSource);  
+    }
+    fs.writeFile(dest_path, parserSource);
   });
 });

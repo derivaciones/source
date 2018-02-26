@@ -17,7 +17,12 @@ body{
 
 header{
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
-  background: #2e7bcf url(../asset/header-bg.jpg) 0 0 repeat-x;
+  /*background: #2e7bcf url(../asset/header-bg.png) 0 0 repeat-x;*/
+  background: #ff0000; /* Old browsers */
+  background: -moz-linear-gradient(top, #ff0000 0%, #e20003 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #ff0000 0%,#e20003 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #ff0000 0%,#e20003 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff0000', endColorstr='#e20003',GradientType=0 ); /* IE6-9 */
   border-bottom: solid 1px #275da1;
   height: $header-height-xxs;
   width: 100%;
@@ -50,7 +55,7 @@ header{
         margin-left: 50px;
         margin-right: 100px;
         font-weight: normal;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         text-align: center;
         transition: all 0.5s;
       }

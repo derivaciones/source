@@ -1,3 +1,7 @@
+$button-border-color: #FF4444;
+$button-color: #FF4444;
+
+
 body main .menu-container{
   width: 100%;
   .menu{
@@ -7,7 +11,7 @@ body main .menu-container{
     .menu-button-icon,
     .menu-button{
       border: none;
-      color: #2196f3;
+      color: $button-color;
       text-align: center;
       text-decoration: none;
       display: inline-block;
@@ -16,34 +20,33 @@ body main .menu-container{
       position: relative;
       width: 30px;
       height: 20px;
-      border: 1px solid #3f51b5;
+      border: 1px solid $button-border-color;
       background-color: transparent;
       margin: 2px;
       float: left;
     }
-    .menu-button-icon,
-    .menu-button{
-      > *{
-        vertical-align: middle;
-      }
-    }
     .menu-button-icon{
       font-size: 12px;
-      // padding: 6px 5px 2px 5px;
-      // .fa{
-      //   position: relative;
-      //   top: -2px;
-      // }
     }
     .menu-button-text{
       font-weight: bold;
       font-size: 12px;
       line-height: 12px;
-      //padding: 6px 5px 8px 5px;
     }
     .menu-button{
       font-weight: bold;
       font-size: 16px;
+      &.m-char > *{
+        position: relative;
+        top: -1px;
+      }
+      &.big-char{
+        font-size: 12px;
+        > *{
+          position: relative;
+          top: 1px;
+        }
+      }
     }
   }
 }
@@ -52,8 +55,6 @@ body.full{
     top: $header-height;
   }
 }
-
-
 
 @include sm{
   body main .menu-container{
@@ -78,16 +79,14 @@ body.full{
       .menu-button-text,
       .menu-button-icon,
       .menu-button{
-        color: #00897B;
         width: 40px;
         height: 25px;
-        border: 1px solid #00897B;
         margin: 2px;
       }
       .menu-button-icon{
         font-size: 12px;
         .fa{
-          top: -2px;
+          top: -4px;
         }
       }
       .menu-button-text{
@@ -95,8 +94,9 @@ body.full{
         font-size: 12px;
       }
       .menu-button{
-        font-weight: bold;
-        font-size: 16px;
+        &.m-char > *{
+          top: 0;
+        }
       }
     }
   }

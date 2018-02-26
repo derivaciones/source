@@ -50,6 +50,24 @@ do ->
       root.appendChild mk_span expression.connector.content, ['connector']
       root.appendChild process_expression expression.right
       root
+    APPLICATION:  (expression)->
+      root = mk_div ['application']
+      root.appendChild mk_span expression.identifier, ['identifier']
+      for element in expression.elements
+        root.appendChild mk_span element.identifier, ['element']
+      root
+    FORALL:  (expression)->
+      root = mk_div ['forall']
+      root.appendChild mk_span '∀', ['identifier']
+      root.appendChild mk_span expression.element.identifier, ['element']
+      root.appendChild process_expression expression.expression
+      root
+    EXIST:  (expression)->
+      root = mk_div ['exist']
+      root.appendChild mk_span '∃', ['identifier']
+      root.appendChild mk_span expression.element.identifier, ['element']
+      root.appendChild process_expression expression.expression
+      root
     ELEMENT: (expression)->
       mk_span expression.identifier, ['element']
     NEGATION: (expression)->
@@ -66,31 +84,48 @@ do ->
     CONTRADICTION: (expression)->
       mk_span expression.content, ['contradiction']
 
+  mk_ndex = (node, level)->
+    container = mk_div ['index-left']
+    container.appendChild mk_span node.index, ['index-left-text']
+    for index in [0 .. level]
+      fixer = mk_div ['index-left-level']
+      fixer.appendChild container
+      container = fixer
+    node.view.appendChild container
+
   mk =
-    CLOSE_ITERATION_ERROR: (node)->
+    COMMENT:   (node, error, level)->
+      console.log(node)
+      node.view = mk_div ['comment']
+      node.view.appendChild mk_span node.content, ['comment-text']
+      node
+    CLOSE_ITERATION_ERROR: (node, error, level)->
       node.view = mk_div ['iteration-close']
       node.view.appendChild mk_span '<<', ['iteration-close-text']
       process_errors node, true
-    PREMISE:   (node, error)->
+    PREMISE:   (node, error, level)->
       node.view = mk_div ['premise']
       node.view.appendChild process_expression node.expression
       node.view.appendChild mk_span 'premisa', ['premise-text']
+      mk_ndex node, level
       process_errors node, error
-    SUPPOSED:  (node, error)->
+    SUPPOSED:  (node, error, level)->
       node.view = mk_div ['supposed']
       node.view.appendChild process_expression node.expression
       node.view.appendChild mk_span 'supuesto', ['supposed-text']
+      mk_ndex node, level
       process_errors node, error
-    ASSERTION: (node, error)->
+    ASSERTION: (node, error, level)->
       node.view = mk_div ['assertion']
       node.view.appendChild process_expression node.expression
       mk_rule node.rule
       node.view.appendChild node.rule.view
+      mk_ndex node, level
       process_errors node, error
-    ITERATION: (node, error)->
+    ITERATION: (node, error, level)->
       node.view = mk_div ['iteration']
-      process_children node, error
-    ERROR:     (node)->
+      process_children node, error, level+1
+    ERROR:     (node, error, level)->
       if(node.name == 'FINALIZACION_DENTRO_DE_ITERACION')
         node.view = mk_div ['error-wrapper']
         node.view.appendChild mk_img ['state-error-left'], 'asset/error.png'
@@ -134,25 +169,25 @@ do ->
   process_expression = (expression)->
     mk_expression[expression.type](expression)
 
-  process_children = (parent, error)->
+  process_children = (parent, error, level)->
     for node in parent.children
-      mk[node.type] node, error
+      mk[node.type] node, error, level
       parent.view.appendChild node.view
 
-  mk_index = (ast)->
-    width_klass = 'index-container-' + ast.length.toString().length
-    rules = mk_div ['index-container',width_klass]
-    ast.root.view.appendChild rules
-    for elem in ast.indices
-      rules.appendChild mk_span elem.index, ['index', elem.klass]
+  # mk_index = (ast)->
+  #   width_klass = 'index-container-' + ast.length.toString().length
+  #   rules = mk_div ['index-container',width_klass]
+  #   ast.root.view.appendChild rules
+  #   for elem in ast.indices
+  #     rules.appendChild mk_span (elem.index || '.'), ['index', elem.klass]
 
 
   viewer.process = (ast)->
     ast.root.view = mk_div ['root']
-    mk_index ast
+    # mk_index ast
     lines = mk_div ['lines']
     for node in ast.root.children
-      mk[node.type] node, ast.error
+      mk[node.type] node, ast.error, 0
       lines.appendChild node.view
       add_classes(node.view, ['first-level'])
     ast.root.view.appendChild lines

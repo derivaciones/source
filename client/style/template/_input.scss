@@ -9,5 +9,7 @@ textarea{
   font-family: monospace;
   box-sizing: border-box;
   padding: 0;
-  //border: 0;
+  overflow: auto;
+  word-wrap: normal;
+  white-space: nowrap;
 }
