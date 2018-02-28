@@ -15,6 +15,11 @@ body{
   height: auto;
 }
 
+@font-face {
+    font-family: 'Architects Daughter';
+    src: url('../font/ArchitectsDaughter/ArchitectsDaughter.woff2');
+}
+
 header{
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
   /*background: #2e7bcf url(../asset/header-bg.png) 0 0 repeat-x;*/

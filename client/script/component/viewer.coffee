@@ -93,9 +93,23 @@ do ->
       container = fixer
     node.view.appendChild container
 
+  experimental_message = 'Esta caracteristica es experimental'+
+    ' y aún no se pueden realizar validaciones sobre la misma'
+
+  contains = (item, list)->
+    list.indexOf(item) isnt -1
+
+  experimental  = (node)->
+    if contains( node.expression.type, ['FORALL', 'EXIST', 'APPLICATION'] )
+      container = mk_span '', ['experimental']
+      icon = mk_span '', ['experimental-icon']
+      icon.appendChild mk_span '', ['fa', 'fa-exclamation-triangle']
+      container.appendChild icon
+      container.appendChild mk_span experimental_message, []
+      node.view.appendChild container
+
   mk =
     COMMENT:   (node, error, level)->
-      console.log(node)
       node.view = mk_div ['comment']
       node.view.appendChild mk_span node.content, ['comment-text']
       node
@@ -107,6 +121,7 @@ do ->
       node.view = mk_div ['premise']
       node.view.appendChild process_expression node.expression
       node.view.appendChild mk_span 'premisa', ['premise-text']
+      experimental node
       mk_ndex node, level
       process_errors node, error
     SUPPOSED:  (node, error, level)->
@@ -114,6 +129,7 @@ do ->
       node.view.appendChild process_expression node.expression
       node.view.appendChild mk_span 'supuesto', ['supposed-text']
       mk_ndex node, level
+      experimental node
       process_errors node, error
     ASSERTION: (node, error, level)->
       node.view = mk_div ['assertion']
@@ -121,6 +137,7 @@ do ->
       mk_rule node.rule
       node.view.appendChild node.rule.view
       mk_ndex node, level
+      experimental node
       process_errors node, error
     ITERATION: (node, error, level)->
       node.view = mk_div ['iteration']

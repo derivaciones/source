@@ -9,7 +9,7 @@ exec = require('child_process').execSync;
 mountFolder = (connect, dir) ->
   connect.static require('path').resolve(dir)
 
-app_name = require('./package.json').name
+appName = require('./package.json').name
 
 # # Globbing
 # for performance reasons we're only matching one level down:
@@ -18,20 +18,20 @@ app_name = require('./package.json').name
 # 'test/spec/**/*.js'
 module.exports = (grunt) ->
 
-  unless app_name
-    throw new TypeError('must specify an application name in bower.json file')
+  unless appName
+    throw new TypeError('must specify an application name in package.json file')
 
-  grunt.log.write 'application name: ' + app_name + '\n'
+  grunt.log.write 'application name: ' + appName + '\n'
 
   require('load-grunt-tasks') grunt
   # require('time-grunt') grunt
   # configurable paths
 
   yeomanConfig =
-    bower:   'bower_components'
-    src:     'client'
-    dist:    'dist'
-    tmp:     'tmp'
+    nodeModules: 'node_modules'
+    src:         'client'
+    dist:        'dist'
+    tmp:         'tmp'
   do ->
     (maybe_dist = grunt.option('dist')) and
     (typeof maybe_dist is 'string') and
@@ -73,6 +73,9 @@ module.exports = (grunt) ->
       assets:
         files: ['<%= yeoman.src %>/**/*.{jpg,jpg,png}']
         tasks: ['copy:assets']
+      fonts:
+        files: ['<%= yeoman.src %>/font/**']
+        tasks: ['copy:font']
 
       # watch.livereload: files which demand the page reload
       livereload:
@@ -100,7 +103,6 @@ module.exports = (grunt) ->
           src: [
             '<%= yeoman.dist %>/**/*',
             '!<%= yeoman.dist %>/.gitignore',
-            '!<%= yeoman.dist %>/bower_components/**'
           ]
         ]
       tmp:
@@ -178,6 +180,25 @@ module.exports = (grunt) ->
           src: '**/*.{jpg,png}'
           dest: '<%= yeoman.dist %>/asset'
         ]
+      font:
+        files: [
+          expand: true
+          cwd: '<%= yeoman.src %>/font'
+          src: '**'
+          dest: '<%= yeoman.dist %>/font'
+        ]
+      nodeModules:
+        files: [
+          expand: true
+          cwd: '<%= yeoman.nodeModules %>/components-font-awesome/css'
+          src: 'fontawesome-all.css'
+          dest: '<%= yeoman.dist %>/style'
+        ,
+          expand: true
+          cwd: '<%= yeoman.nodeModules %>/components-font-awesome/webfonts'
+          src: '**'
+          dest: '<%= yeoman.dist %>/webfonts'
+        ]
       text:
         files: [
           expand: true
@@ -241,7 +262,9 @@ module.exports = (grunt) ->
       'copy:favicon'
       'copy:github'
       'copy:assets'
+      'copy:font'
       'copy:text'
+      'copy:nodeModules'
       'preprocess:server'
       'bake:server'
       'generate'
@@ -249,4 +272,22 @@ module.exports = (grunt) ->
       'sass:server'
       'connect:livereload'
       'watch'
+    ]
+
+  grunt.registerTask 'build', (target) ->
+    grunt.task.run [
+      'clean:dist'
+      'clean:tmp'
+      #'write:version'
+      'copy:favicon'
+      'copy:github'
+      'copy:assets'
+      'copy:font'
+      'copy:text'
+      'copy:nodeModules'
+      'preprocess:server'
+      'bake:server'
+      'generate'
+      'coffee:server'
+      'sass:server'
     ]

@@ -80,7 +80,6 @@ window.addLoadListener ->
     parser = new derivaciones.Parser
     ast = validator.validate(input.value, parser)
     if ast
-      console.log ast
       viewer.process(ast)
       output.appendChild ast.root.view
     previousActiveElement.focus()

@@ -6,6 +6,15 @@
   // display: inline-flex;
   padding-left: 15px;
   position: relative;
+  .experimental{
+    color: red;
+    clear: both;
+    padding-top: 5px;
+    .experimental-icon{
+      margin-right: 5px;
+      font-size: 14px;
+    }
+  }
 
   .lines{
     float: left;
